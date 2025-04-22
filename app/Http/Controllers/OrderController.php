@@ -37,7 +37,15 @@ class OrderController extends Controller
             ],
         ]);
     }
+    public function create()
+{
+    // $produce = $produce->load('category'); // Eager-load the category relationship
 
+    return inertia('Orders/Create', [
+    'produce' => Produce::all(),
+    ]);
+}
+    
     public function store(Request $request)
     {
         $request->validate([

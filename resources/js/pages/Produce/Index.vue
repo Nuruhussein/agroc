@@ -19,7 +19,7 @@ const props = defineProps({
   },
 });
 
-console.log(props.produce);
+console.log(props.produce.data);
 
 const search = ref(props.filters.search || ''); // Ensure search is initialized correctly
 
@@ -134,7 +134,7 @@ const deleteProduce = (id) => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.name }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                    {{ item.category }}
+                    {{ item.category.name }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ Number(item.price).toFixed(2) }}</td>

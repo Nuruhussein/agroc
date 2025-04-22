@@ -18,4 +18,5 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
     public function produce() { return $this->belongsTo(Produce::class); }
+    
 }

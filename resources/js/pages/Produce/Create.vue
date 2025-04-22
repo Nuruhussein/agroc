@@ -30,22 +30,19 @@
 
               <!-- Category Field -->
               <div>
-                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
                 <select
-                  id="category"
-                  v-model="form.category"
+                  id="category_id"
+                  v-model="form.category_id"
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.category }"
                   required
                 >
-                  <option value="" disabled selected>Select category</option>
-                  <option value="Vegetables">Vegetables</option>
-                  <option value="Fruits">Fruits</option>
-                  <option value="Grains">Grains</option>
-                  <option value="Dairy">Dairy</option>
-                  <option value="Meat">Meat</option>
+                  <option value="" disabled>Select category</option>
+                  <option v-for="category in categories" :key="category.id" :value="category.id">
+                    {{ category.name }}
+                  </option>
                 </select>
-                <p v-if="form.errors.category" class="mt-2 text-sm text-red-600">{{ form.errors.category }}</p>
+                <p v-if="form.errors.category_id" class="mt-2 text-sm text-red-600">{{ form.errors.category_id }}</p>
               </div>
             </div>
 
@@ -117,32 +114,56 @@
   </AppLayout>
 </template>
 
-<script setup lang="ts">
+<script>
 import { Head, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Dashboard', href: '/dashboard' },
-  { title: 'Produce', href: '/produce' },
-  { title: 'Add Produce', href: '' },
-];
-
-const form = useForm({
-  name: '',
-  category: '',
-  price: '',
-  quantity: '',
-});
-
-const submit = () => {
-  form.transform((data) => ({
-    ...data,
-    price: data.price ? parseFloat(data.price) : null,
-    quantity: data.quantity ? parseInt(data.quantity, 10) : null,
-  })).post(route('produce.store'), {
-    preserveScroll: true,
-    onSuccess: () => form.reset(),
-  });
-};
+export default {
+  components: {
+    Head,
+    AppLayout,
+  },
+  
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+      default: () => []
+    }
+  },
+  
+  mounted() {
+    console.log('Categories:', this.categories); // Debug categories
+  },
+  
+  data() {
+    return {
+      breadcrumbs: [
+        { title: 'Dashboard', href: '/dashboard' },
+        { title: 'Produce', href: '/produce' },
+        { title: 'Add Produce', href: '' },
+      ],
+      form: useForm({
+        name: '',
+        category_id: '',
+        price: '',
+        quantity: '',
+      })
+    }
+  },
+  
+  methods: {
+    submit() {
+      console.log('Form data:', this.form); // Debug form data
+      this.form.transform((data) => ({
+        ...data,
+        price: data.price ? parseFloat(data.price) : null,
+        quantity: data.quantity ? parseInt(data.quantity, 10) : null,
+      })).post(this.route('produce.store'), {
+        preserveScroll: true,
+        onSuccess: () => this.form.reset(),
+      });
+    }
+  }
+}
 </script>

@@ -1,26 +1,28 @@
-<script setup lang="ts">
+<script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-import { Head,Link  } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { Pencil, ArrowLeft } from 'lucide-vue-next';
 
-
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Produce', href: '/produce' },
     { title: 'View Produce', href: '' },
 ];
 
-defineProps<{
+defineProps({
     produce: {
-        id: number;
-        name: string;
-        category: string;
-        price: number;
-        quantity: number;
-        user: { name: string };
-    };
-}>();
+        type: Object,
+        required: true,
+        default: () => ({
+            id: 0,
+            name: '',
+            category: { name: '' },
+            price: 0,
+            quantity: 0,
+            user: { name: '' },
+        }),
+    },
+});
 </script>
 
 <template>
@@ -36,7 +38,7 @@ defineProps<{
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
                     <Link
                         :href="route('produce.edit', produce.id)"
-                        class="inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+                        class="inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
                     >
                         <Pencil class="-ml-0.5 mr-1.5 h-5 w-5" />
                         Edit
@@ -54,7 +56,7 @@ defineProps<{
                             <dt class="text-sm font-medium text-gray-500">Category</dt>
                             <dd class="mt-1 text-sm text-gray-900">
                                 <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                    {{ produce.category }}
+                                    {{ produce.category.name }}
                                 </span>
                             </dd>
                         </div>

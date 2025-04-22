@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->default(1)->constrained()->onDelete('cascade');
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
             $table->string('image_path')->nullable();

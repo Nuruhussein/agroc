@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         href: '/orders',
         icon: ClipboardList,
     },
+    {
+        title: 'createOrders',
+        href: '/orders/create',
+        icon: ClipboardList,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
