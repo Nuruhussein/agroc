@@ -5,24 +5,29 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Home, ShoppingCart, Tag, ClipboardList } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
-        icon: LayoutGrid,
+        icon: Home,
     },
     {
         title: 'Produces',
         href: '/produce',
-        icon: LayoutGrid,
+        icon: ShoppingCart,
+    },
+    {
+        title: 'Category',
+        href: '/categories',
+        icon: Tag,
     },
     {
         title: 'Orders',
         href: '/orders',
-        icon: LayoutGrid,
+        icon: ClipboardList,
     },
 ];
 
