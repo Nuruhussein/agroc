@@ -1,5 +1,8 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import Button from 'primevue/button';
+import Navbar from '@/components/Navbar.vue';
+
 </script>
 
 <template>
@@ -10,6 +13,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <div class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] dark:bg-[#0a0a0a] lg:justify-center lg:p-8">
         <header class="not-has-[nav]:hidden mb-6 w-full max-w-[335px] text-sm lg:max-w-4xl">
             <nav class="flex items-center justify-end gap-4">
+                <Navbar />
                 <Link
                     v-if="$page.props.auth.user"
                     :href="route('dashboard')"
@@ -36,6 +40,19 @@ import { Head, Link } from '@inertiajs/vue3';
         <div class="text-center p-6">
     <h1 class="text-2xl font-bold">Welcome to AgriMarket!</h1>
     <p class="mt-4 text-gray-600">Connect farmers and buyers easily.</p>
+    <Button label="Verify" />
   </div>
     </div>
+</template> -->
+<script setup >
+// import { Head, Link } from '@inertiajs/vue3';
+// import Button from 'primevue/button';
+import Navbar from '@/components/Navbar.vue';
+import cta from '@/components/home/cta.vue';
+</script>
+
+<template>
+    <Navbar/>
+    <cta/>
+    
 </template>
