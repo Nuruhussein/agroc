@@ -17,14 +17,19 @@ class ProduceFactory extends Factory
     public function definition(): array
     {
         return [
+        
             'user_id' => \App\Models\User::factory(),
-            'name' => $this->faker->word(),
-            // 'category' => $this->faker->randomElement(['vegetable', 'fruit', 'grain']),
+            'name' => 'Organic Cherry Tomatoes',
             'category_id' => \App\Models\Category::inRandomOrder()->first()->id ?? \App\Models\Category::factory(),
-
-            'price' => $this->faker->randomFloat(2, 5, 100),
-            'quantity' => $this->faker->numberBetween(1, 50),
-            'image_path' => 'produce.jpg',
+            'location' => 'California, USA',
+            'farm_name' => 'Green Valley Farms',
+            'description' => 'Sweet and juicy organic cherry tomatoes, perfect for salads and snacks. Grown with sustainable farming practices.',
+            'price' => 4.99,
+            'original_price' => 5.99,
+            'discount' => 17,
+            'organic' => true,
+            'quantity' => $this->faker->numberBetween(10, 100),
+            'image_path' => 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
         ];
     }
 }

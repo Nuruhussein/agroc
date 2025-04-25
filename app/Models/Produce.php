@@ -9,7 +9,19 @@ class Produce extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','category_id', 'name', 'price', 'quantity', 'image_path'
+    
+        'user_id',
+        'name',
+       'category_id',
+        'location',
+        'farm_name',
+        'description',
+        'price',
+        'original_price',
+        'discount',
+        'organic',
+        'quantity',
+        'image_path',
     ];
 // app/Models/Produce.php
 protected $table = 'produce';

@@ -46,23 +46,23 @@ class OrderController extends Controller
     ]);
 }
     
-    public function store(Request $request)
-    {
-        $request->validate([
-            'produce_id' => 'required|exists:produce,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'produce_id' => 'required|exists:produce,id',
+        // Remove quantity from validation since it's always 1
+    ]);
 
-        Order::create([
-            'buyer_id' => Auth::id(),
-            'produce_id' => $request->produce_id,
-            'quantity' => $request->quantity,
-            'status' => 'pending',
-            'delivery_status' => 'pending',
-        ]);
+    Order::create([
+        'buyer_id' => Auth::id(),
+        'produce_id' => $request->produce_id,
+        'quantity' => 1, // Set default quantity to 1
+        'status' => 'pending',
+        'delivery_status' => 'pending',
+    ]);
 
-        return redirect()->route('orders.index');
-    }
+    return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+}
 
     public function update(Request $request, Order $order)
     {

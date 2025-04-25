@@ -1,247 +1,247 @@
 <template>
-    <nav
-      :class="`bg-white/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-700 dark:bg-gray-900/80 max-w-screen-2xl mx-auto px-4 sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'py-2' : 'py-3'
-      }`"
-    >
-      <div class="container px-6 mx-auto">
-        <div class="flex items-center justify-between">
-          <!-- Logo -->
-          <div class="flex items-center flex-shrink-0">
-            <Link href="/">
-              <img
-                :class="`h-10 transition-all duration-300 ${
-                  isScrolled ? 'h-8' : 'h-10'
-                }`"
-                src="/storage/images/turas.PNG"
-                alt="Logo"
-              />
-            </Link>
-          </div>
+  <nav
+    :class="`bg-white/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-700 dark:bg-gray-900/80 max-w-screen-2xl mx-auto px-4 sticky top-0 z-50 transition-all duration-300 ${
+    isScrolled ? 'py-2' : 'py-3'
+    }`"
+  >
+    <div class="container px-6 mx-auto">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center flex-shrink-0">
+      <Link href="/">
+        <img
+        :class="`h-10 transition-all duration-300 ${
+          isScrolled ? 'h-8' : 'h-10'
+        }`"
+        src="https://marketplace.canva.com/EAGHc4fErhI/1/0/1600w/canva-green-and-white-organic-agriculture-logo-FN-ZChdNoIg.jpg"
+        alt="Logo"
+        />
+      </Link>
+      </div>
   
-          <!-- Desktop Menu -->
-          <div class="hidden lg:flex items-center space-x-8">
-            <Link
-              href="/"
-              class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
-            >
-              About us
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link
-              href="/categories"
-              class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
-            >
-              Services
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link
-              href="/#about"
-              class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
-            >
-              Products
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link
-              href="/book-articles"
-              class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
-            >
-              Contact us
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link
-              href="/authors"
-              class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
-            >
-              Locations
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
-            </Link>
+      <!-- Desktop Menu -->
+      <div class="hidden lg:flex items-center space-x-8">
+      <Link
+        href="/"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
+      >
+        About us
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+      </Link>
+      <Link
+        href="/categories"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
+      >
+        Services
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+      </Link>
+      <Link
+        href="/markateplace"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
+      >
+        markateplace
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+      </Link>
+      <Link
+        href="/book-articles"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
+      >
+        Contact us
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+      </Link>
+      <Link
+        href="/authors"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
+      >
+        Locations
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+      </Link>
   
-            <!-- User Dropdown or Login Button -->
-            <div class="ml-4">
-              <div v-if="auth.user" class="relative">
-                <button
-                  @click="isDropdownOpen = !isDropdownOpen"
-                  class="flex items-center space-x-1 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors duration-200"
-                >
-                  <span class="text-sm font-medium">{{ auth.user.name }}</span>
-                  <svg
-                    class="w-4 h-4 transition-transform duration-200"
-                    :class="{ 'rotate-180': isDropdownOpen }"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                <transition
-                  enter-active-class="transition duration-100 ease-out"
-                  enter-from-class="transform scale-95 opacity-0"
-                  enter-to-class="transform scale-100 opacity-100"
-                  leave-active-class="transition duration-75 ease-in"
-                  leave-from-class="transform scale-100 opacity-100"
-                  leave-to-class="transform scale-95 opacity-0"
-                >
-                  <div
-                    v-if="isDropdownOpen"
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700"
-                  >
-                    <Link
-                      v-if="auth.user.role === 'admin' || auth.user.role === 'farmer'"
-                      href="/dashboard"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/logout"
-                      method="post"
-                      as="button"
-                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
-                    >
-                      Logout
-                    </Link>
-                  </div>
-                </transition>
-              </div>
-              <Link
-                v-else
-                href="/login"
-                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-              >
-                Login
-              </Link>
-            </div>
-          </div>
-  
-          <!-- Mobile menu button -->
-          <div class="flex lg:hidden">
-            <button
-              @click="isOpen = !isOpen"
-              type="button"
-              class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 focus:outline-none"
-              aria-label="Toggle menu"
-            >
-              <svg
-                v-if="!isOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-  
-        <!-- Mobile Menu -->
+      <!-- User Dropdown or Login Button -->
+      <div class="ml-4">
+        <div v-if="auth.user" class="relative">
+        <button
+          @click="isDropdownOpen = !isDropdownOpen"
+          class="flex items-center space-x-1 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 transition-colors duration-200"
+        >
+          <span class="text-sm font-medium">{{ auth.user.name }}</span>
+          <svg
+          class="w-4 h-4 transition-transform duration-200"
+          :class="{ 'rotate-180': isDropdownOpen }"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+          </svg>
+        </button>
         <transition
-          enter-active-class="transition duration-200 ease-out"
-          enter-from-class="transform opacity-0 scale-95"
-          enter-to-class="transform opacity-100 scale-100"
-          leave-active-class="transition duration-150 ease-in"
-          leave-from-class="transform opacity-100 scale-100"
-          leave-to-class="transform opacity-0 scale-95"
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-75 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
         >
           <div
-            v-if="isOpen"
-            class="lg:hidden mt-2 space-y-2 pb-3 sm:pb-0"
+          v-if="isDropdownOpen"
+          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700"
           >
-            <Link
-              href="/"
-              class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              About us
-            </Link>
-            <Link
-              href="/categories"
-              class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              Services
-            </Link>
-            <Link
-              href="/#about"
-              class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              Products
-            </Link>
-            <Link
-              href="/book-articles"
-              class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              Contact us
-            </Link>
-            <Link
-              href="/authors"
-              class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-            >
-              Locations
-            </Link>
-  
-            <!-- Mobile Login/User Section -->
-            <div v-if="auth.user" class="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
-              <div class="flex items-center px-4">
-                <div class="text-sm font-medium text-gray-800 dark:text-gray-200">
-                  {{ auth.user.name }}
-                </div>
-              </div>
-              <div class="mt-2 space-y-1">
-                <Link
-                  v-if="auth.user.role === 'admin' || auth.user.role === 'farmer'"
-                  href="/dashboard"
-                  class="block px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/logout"
-                  method="post"
-                  as="button"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
-                >
-                  Logout
-                </Link>
-              </div>
-            </div>
-            <Link
-              v-else
-              href="/login"
-              class="block w-full px-4 py-2 mt-2 text-base font-medium text-center text-white bg-blue-600 rounded-md hover:bg-blue-700"
-            >
-              Login
-            </Link>
+          <Link
+            v-if="auth.user.role === 'admin' || auth.user.role === 'farmer'"
+            href="/dashboard"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/logout"
+            method="post"
+            as="button"
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            Logout
+          </Link>
           </div>
         </transition>
+        </div>
+        <Link
+        v-else
+        href="/login"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+        >
+        Login
+        </Link>
       </div>
-    </nav>
+      </div>
+  
+      <!-- Mobile menu button -->
+      <div class="flex lg:hidden">
+      <button
+        @click="isOpen = !isOpen"
+        type="button"
+        class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 focus:outline-none"
+        aria-label="Toggle menu"
+      >
+        <svg
+        v-if="!isOpen"
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+        </svg>
+        <svg
+        v-else
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+        </svg>
+      </button>
+      </div>
+    </div>
+  
+    <!-- Mobile Menu -->
+    <transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="transform opacity-0 scale-95"
+      enter-to-class="transform opacity-100 scale-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="transform opacity-100 scale-100"
+      leave-to-class="transform opacity-0 scale-95"
+    >
+      <div
+      v-if="isOpen"
+      class="lg:hidden mt-2 space-y-2 pb-3 sm:pb-0"
+      >
+      <Link
+        href="/"
+        class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+      >
+        About us
+      </Link>
+      <Link
+        href="/categories"
+        class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+      >
+        Services
+      </Link>
+      <Link
+        href="/markateplace"
+        class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+      >
+        markateplace
+      </Link>
+      <Link
+        href="/book-articles"
+        class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+      >
+        Contact us
+      </Link>
+      <Link
+        href="/authors"
+        class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+      >
+        Locations
+      </Link>
+  
+      <!-- Mobile Login/User Section -->
+      <div v-if="auth.user" class="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center px-4">
+        <div class="text-sm font-medium text-gray-800 dark:text-gray-200">
+          {{ auth.user.name }}
+        </div>
+        </div>
+        <div class="mt-2 space-y-1">
+        <Link
+          v-if="auth.user.role === 'admin' || auth.user.role === 'farmer'"
+          href="/dashboard"
+          class="block px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+        >
+          Dashboard
+        </Link>
+        <Link
+          href="/logout"
+          method="post"
+          as="button"
+          class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
+        >
+          Logout
+        </Link>
+        </div>
+      </div>
+      <Link
+        v-else
+        href="/login"
+        class="block w-full px-4 py-2 mt-2 text-base font-medium text-center text-white bg-blue-600 rounded-md hover:bg-blue-700"
+      >
+        Login
+      </Link>
+      </div>
+    </transition>
+    </div>
+  </nav>
   </template>
   
   <script setup>
@@ -254,14 +254,14 @@
   const auth = usePage().props.auth
   
   const handleScroll = () => {
-    isScrolled.value = window.scrollY > 10
+  isScrolled.value = window.scrollY > 10
   }
   
   onMounted(() => {
-    window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', handleScroll)
   })
   
   onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', handleScroll)
   })
   </script>

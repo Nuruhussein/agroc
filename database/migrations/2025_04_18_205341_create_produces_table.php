@@ -13,14 +13,21 @@ return new class extends Migration
     {
         Schema::create('produce', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('name');
-            $table->foreignId('category_id')->default(1)->constrained()->onDelete('cascade');
-            $table->decimal('price', 10, 2);
-            $table->integer('quantity');
-            $table->string('image_path')->nullable();
-            $table->timestamps();
+        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+        $table->string('name');
+        $table->foreignId('category_id')->default(1)->constrained()->onDelete('cascade');
+        $table->string('location')->nullable();
+        $table->string('farm_name')->nullable();
+        $table->text('description')->nullable();
+        $table->decimal('price', 8, 2);
+        $table->decimal('original_price', 8, 2)->nullable();
+        $table->unsignedTinyInteger('discount')->nullable();
+        $table->boolean('organic')->default(false);
+        $table->integer('quantity');
+        $table->string('image_path')->nullable();
+        $table->timestamps();
         });
+       
         
     }
 

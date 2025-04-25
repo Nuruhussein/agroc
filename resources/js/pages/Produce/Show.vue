@@ -1,7 +1,18 @@
 <script setup>
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { Pencil, ArrowLeft } from 'lucide-vue-next';
+import { 
+  Pencil, 
+  ArrowLeft,
+  Leaf,
+  Tag,
+  DollarSign,
+  Percent,
+  Package,
+  MapPin,
+  FileText,
+  Image as ImageIcon
+} from 'lucide-vue-next';
 
 const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -13,14 +24,6 @@ defineProps({
     produce: {
         type: Object,
         required: true,
-        default: () => ({
-            id: 0,
-            name: '',
-            category: { name: '' },
-            price: 0,
-            quantity: 0,
-            user: { name: '' },
-        }),
     },
 });
 </script>
@@ -29,57 +32,156 @@ defineProps({
     <Head :title="produce.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="px-4 sm:px-6 lg:px-8 py-8">
-            <div class="sm:flex sm:items-center sm:justify-between mb-8">
-                <div class="sm:flex-auto">
-                    <h1 class="text-2xl font-bold text-gray-900">{{ produce.name }}</h1>
-                    <p class="mt-2 text-sm text-gray-600">Produce details</p>
+        <div class="px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div>
+                    <Link 
+                        :href="route('produce.index')"
+                        class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 mb-4"
+                    >
+                        <ArrowLeft class="h-4 w-4 mr-2" />
+                        Back to produce
+                    </Link>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ produce.name }}</h1>
+                        <span 
+                            v-if="produce.organic"
+                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
+                        >
+                            <Leaf class="h-3 w-3" />
+                            Organic
+                        </span>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-500">Produce details and information</p>
                 </div>
-                <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                <div>
                     <Link
                         :href="route('produce.edit', produce.id)"
-                        class="inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+                        class="inline-flex items-center rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-amber-600 hover:to-amber-700 transition-all"
                     >
-                        <Pencil class="-ml-0.5 mr-1.5 h-5 w-5" />
-                        Edit
+                        <Pencil class="h-5 w-5 mr-2" />
+                        Edit Produce
                     </Link>
                 </div>
             </div>
 
-            <div class="bg-white shadow rounded-lg overflow-hidden">
-                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Produce Information</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Header -->
+                <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <Package class="h-5 w-5 text-amber-500" />
+                        Produce Information
+                    </h3>
                 </div>
-                <div class="px-4 py-5 sm:p-6">
-                    <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">Category</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                    {{ produce.category.name }}
-                                </span>
-                            </dd>
+
+                <!-- Main Content -->
+                <div class="px-6 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                                <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
+                                    <Tag class="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-500">Category</h4>
+                                    <p class="mt-1 text-base font-medium text-gray-900">
+                                        {{ produce.category?.name || 'N/A' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        <DollarSign class="h-4 w-4" />
+                                        Current Price
+                                    </h4>
+                                    <p class="mt-1 text-xl font-bold text-gray-900">
+                                        ${{ Number(produce.price).toFixed(2) }}
+                                    </p>
+                                </div>
+
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        <DollarSign class="h-4 w-4" />
+                                        Original Price
+                                    </h4>
+                                    <p class="mt-1 text-lg font-medium text-gray-500 line-through">
+                                        ${{ Number(produce.original_price).toFixed(2) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        <Percent class="h-4 w-4" />
+                                        Discount
+                                    </h4>
+                                    <p class="mt-1 text-lg font-bold text-rose-600">
+                                        {{ produce.discount }}%
+                                    </p>
+                                </div>
+
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                        <Package class="h-4 w-4" />
+                                        Quantity
+                                    </h4>
+                                    <p class="mt-1 text-lg font-medium text-gray-900">
+                                        {{ produce.quantity }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">Price</dt>
-                            <dd class="mt-1 text-sm text-gray-900">${{ Number(produce.price).toFixed(2) }}</dd>
+
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1">
+                                    <MapPin class="h-4 w-4" />
+                                    Farm Location
+                                </h4>
+                                <p class="mt-1 text-base font-medium text-gray-900">
+                                    {{ produce.farm_name }} • {{ produce.location }}
+                                </p>
+                            </div>
+
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1 mb-2">
+                                    <FileText class="h-4 w-4" />
+                                    Description
+                                </h4>
+                                <p class="text-base text-gray-700">
+                                    {{ produce.description }}
+                                </p>
+                            </div>
+
+                            <div v-if="produce.image_path" class="p-4 bg-gray-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1 mb-2">
+                                    <ImageIcon class="h-4 w-4" />
+                                    Product Image
+                                </h4>
+                                <div class="mt-2 overflow-hidden rounded-lg border border-gray-200">
+                                    <img 
+                                        :src="produce.image_path" 
+                                        :alt="produce.name" 
+                                        class="w-full h-auto object-cover transition-all hover:scale-105"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">Quantity</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ produce.quantity }}</dd>
-                        </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-sm font-medium text-gray-500">Farmer</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ produce.user.name }}</dd>
-                        </div>
-                    </dl>
+                    </div>
                 </div>
-                <div class="px-4 py-4 sm:px-6 border-t border-gray-200 bg-gray-50">
+
+                <!-- Footer -->
+                <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
                     <Link
                         :href="route('produce.index')"
-                        class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        class="inline-flex items-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50 transition-all"
                     >
-                        <ArrowLeft class="-ml-0.5 mr-1.5 h-5 w-5" />
+                        <ArrowLeft class="h-5 w-5 mr-2" />
                         Back to all produce
                     </Link>
                 </div>
@@ -87,3 +189,16 @@ defineProps({
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Custom transition effects */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* Smooth gradient transitions */
+.bg-gradient-to-r {
+  transition: background 0.3s ease;
+}
+</style>
