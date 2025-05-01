@@ -52,7 +52,13 @@ public function store(Request $request)
         'produce_id' => 'required|exists:produce,id',
         // Remove quantity from validation since it's always 1
     ]);
-
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'You must be logged in to place an order.');
+    }
+ 
+    if (Auth::user()->role !== 'buyer') {
+        return redirect()->route('login')->with('error', 'You must be a buyer to place an order.');
+    }
     Order::create([
         'buyer_id' => Auth::id(),
         'produce_id' => $request->produce_id,

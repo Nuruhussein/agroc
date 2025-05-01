@@ -17,8 +17,13 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    const ROLES = [
+        'admin' => 'Admin',
+        'farmer' => 'Farmer', 
+        'buyer' => 'Buyer'
+    ];
     protected $fillable = [
-        'name', 'email', 'phone', 'role', 'region', 'password',
+        'name', 'email', 'phone', 'role','phone', 'region', 'password',
     ];
 
     public function produce() { return $this->hasMany(Produce::class); }

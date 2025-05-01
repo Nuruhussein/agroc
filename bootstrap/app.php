@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\BuyerMiddleware;
+use App\Http\Middleware\FarmerMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -14,14 +17,25 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Cookie configuration
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
+        // Global middleware
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        // Register route middleware (alias)
+        $middleware->alias([
+            'admin' => AdminMiddleware::class,
+            'farmer' => FarmerMiddleware::class,
+            'buyer' => BuyerMiddleware::class,
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Exception handling configuration
     })->create();

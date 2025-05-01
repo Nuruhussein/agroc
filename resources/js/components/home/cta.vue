@@ -11,7 +11,7 @@
 
             <div class="flex flex-col sm:flex-row gap-6 mt-12 w-full sm:w-auto">
                 <a
-                    href="#"
+                    href="/register/farmer"
                     class="relative inline-flex items-center justify-center px-8 py-4 overflow-hidden text-lg font-medium text-white transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl group hover:from-green-600 hover:to-emerald-700 focus:ring-4 focus:ring-emerald-300 focus:ring-opacity-80 shadow-lg hover:shadow-emerald-500/20"
                 >
                     <span class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-emerald-700 rounded group-hover:-mr-4 group-hover:-mt-4">
@@ -27,7 +27,7 @@
                 </a>
 
                 <a
-                    href="#"
+                    href="/register/buyer"
                     class="relative inline-flex items-center justify-center px-8 py-4 overflow-hidden text-lg font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl group hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-blue-300 focus:ring-opacity-80 shadow-lg hover:shadow-blue-500/20"
                 >
                     <span class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-mr-4 group-hover:-mt-4">
@@ -44,13 +44,22 @@
             </div>
 
             <div class="mt-16 text-gray-500 dark:text-gray-400">
-                <p class="text-sm">Already have an account? <a href="#" class="font-medium text-blue-600 dark:text-blue-400 hover:underline">Sign in here</a></p>
+                <p class="text-sm">
+                    Already have an account? 
+                    
+                    <a href="/login" class="font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                        Sign in here
+                    </a>
+                </p>
             </div>
         </div>
     </section>
 </template>
 
 <script>
+  import { Link, usePage } from '@inertiajs/vue3'
+
+
 export default {
     name: "Cta",
 };

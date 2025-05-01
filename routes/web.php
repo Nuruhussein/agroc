@@ -14,6 +14,9 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
+Route::get('/roletest', function () {
+    return Inertia::render('test/roletest');
+})->name('roletest');
 
 // Route::get('/markateplace', function () {
 //     return Inertia::render('markateplace/Index');
@@ -22,8 +25,17 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('produce', ProduceController::class);
-Route::resource('orders', OrderController::class);
+Route::middleware(['farmer'])->group(function () {
+    Route::resource('produce', ProduceController::class)->except(['index', 'show']);
+});
+Route::resource('produce', ProduceController::class)->only(['index', 'show']);
+
+
+Route::resource('orders', OrderController::class)->except(['store']);
+Route::post('orders', [OrderController::class, 'store'])
+    ->middleware(['auth', 'buyer'])
+    ->name('orders.store');
+
 Route::resource('categories', CategoryController::class);
 
 Route::resource('messages', MessageController::class);

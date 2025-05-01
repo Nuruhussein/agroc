@@ -15,37 +15,67 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Show the registration page.
-     */
     public function create(): Response
     {
-        return Inertia::render('auth/Register');
+        $role = null;
+        $title = 'Register';
+        
+        if (request()->is('register/farmer')) {
+            $role = 'farmer';
+            $title = 'Register as Farmer';
+        } elseif (request()->is('register/buyer')) {
+            $role = 'buyer';
+            $title = 'Register as Buyer';
+        }
+
+        return Inertia::render('auth/Register', [
+            'userRole' => $role,
+            'title' => $title,
+        ]);
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    public function storeFarmer(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        return $this->store($request, 'farmer');
+    }
 
-        $user = User::create([
+    public function storeBuyer(Request $request): RedirectResponse
+    {
+        return $this->store($request, 'buyer');
+    }
+
+    protected function store(Request $request, ?string $role = null): RedirectResponse
+    {
+        $validationRules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ];
+
+        if ($role) {
+            $validationRules['phone'] = 'required|string|max:20';
+            $validationRules['region'] = 'required|string|max:255';
+        }
+
+        $request->validate($validationRules);
+
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
+            'role' => $role,
+        ];
+
+        if ($role) {
+            $userData['phone'] = $request->phone;
+            $userData['region'] = $request->region;
+        }
+
+        $user = User::create($userData);
 
         event(new Registered($user));
-
         Auth::login($user);
 
-        return to_route('dashboard');
+        return redirect()->route('dashboard');
     }
 }
