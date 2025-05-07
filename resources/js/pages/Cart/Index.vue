@@ -13,7 +13,23 @@
           />
           <div class="ml-4 flex-1">
             <h3 class="text-lg font-medium text-gray-900">{{ item.name }}</h3>
-            <p class="text-sm text-gray-500">Quantity: {{ item.quantity }}</p>
+            <div class="flex items-center space-x-2">
+              <button
+                @click="cart.updateQuantity(item, -1)"
+                :disabled="cart.isUpdating[item.produce_id] || item.quantity <= 1"
+                class="px-2 py-1 text-sm bg-gray-200 rounded"
+              >
+                {{ cart.isUpdating[item.produce_id] ? '...' : '-' }}
+              </button>
+              <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+              <button
+                @click="cart.updateQuantity(item, 1)"
+                :disabled="cart.isUpdating[item.produce_id]"
+                class="px-2 py-1 text-sm bg-gray-200 rounded"
+              >
+                {{ cart.isUpdating[item.produce_id] ? '...' : '+' }}
+              </button>
+            </div>
             <p class="text-sm font-medium text-gray-900">{{ item.price }}</p>
           </div>
         </div>
@@ -27,22 +43,17 @@
 </template>
 
 <script setup>
-import { inject, computed, watch } from 'vue';
+import { inject, computed } from 'vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 import Navbar from '@/components/Navbar.vue';
 import footerr from '@/components/home/footerr.vue';
 
-const cart = inject('cart');
-const cartItems = computed(() => cart.cartItems.value); // Access .value for Ref
-
-// watch(cartItems, (newItems) => {
-//   console.log('Cart items updated:', newItems);
-// }, { immediate: true, deep: true });
-
-// console.log('Cart:', cart);
-// console.log('Cart items:', cartItems.value);
-
 defineOptions({
   layout: MainLayout,
 });
+const cart = inject('cart');
+const cartItems = computed(() => cart.cartItems.value);
+
+console.log('Cart:', cart);
+console.log('Cart items:', cartItems.value);
 </script>

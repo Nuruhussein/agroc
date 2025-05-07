@@ -44,6 +44,6 @@ Route::get('/markateplace', [MarketController::class, 'index'])->name('markatepl
 
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

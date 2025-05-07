@@ -1,68 +1,60 @@
 // src/composables/useCart.js
-import { ref, computed, inject } from 'vue';
+import { ref, computed } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
 export function useCart() {
-  // Access Inertia props
   const { props } = usePage();
   const user = computed(() => props.auth?.user);
-  const initialCartItems = props.cartItems || [];
-  const initialCartCount = props.cartCount || 0;
+  const cartItems = ref(props.cartItems || []);
+  const cartCount = computed(() => cartItems.value.length);
+  const isAdding = ref({});
+  const isUpdating = ref({});
 
-  // Cart state
-  const cartItems = ref(initialCartItems);
-  const cartCount = ref(initialCartCount);
-  const isAdding = ref({}); // Track adding state per product
-  const addedProductId = ref(null);
-
-  // Computed cart count for reactivity
-  const computedCartCount = computed(() => cartItems.value.length);
-
-  // Add to cart method
-  const addToCart = (product) => {
+  const addToCart = (item) => {
     if (!user.value) {
       router.visit(route('login'));
       return;
     }
 
-    isAdding.value[product.id] = true;
+    isAdding.value[item.id] = true;
 
     router.post(
       route('cart.store'),
-      {
-        produce_id: product.id,
-        quantity: 1,
-      },
+      { produce_id: item.id, quantity: 1 },
       {
         preserveState: true,
         preserveScroll: true,
         onSuccess: (page) => {
-          // Update cart state with new item
-          const newItem = {
-            id: Date.now(), // Temporary ID until backend sync
-            produce_id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            imageSrc: product.imageSrc,
-            imageAlt: product.imageAlt,
-          };
-          cartItems.value.push(newItem);
-          cartCount.value++;
-
-          // Show success indicator
-          addedProductId.value = product.id;
-          setTimeout(() => {
-            addedProductId.value = null;
-          }, 1000);
-
-          console.log('Cart updated:', cartItems.value);
+          cartItems.value = page.props.cartItems || cartItems.value;
         },
-        onError: (errors) => {
-          console.error('Failed to add to cart:', errors);
-        },
+        onError: (errors) => console.error('Failed to add to cart:', errors),
         onFinish: () => {
-          isAdding.value[product.id] = false;
+          isAdding.value[item.id] = false;
+        },
+      }
+    );
+  };
+
+  const updateQuantity = (item, change) => {
+    if (!user.value) {
+      router.visit(route('login'));
+      return;
+    }
+
+    isUpdating.value[item.produce_id] = true;
+
+    router.post(
+      route('cart.update'),
+      { produce_id: item.produce_id, change },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (page) => {
+          cartItems.value = page.props.cartItems || cartItems.value;
+        },
+        onError: (errors) => console.error('Failed to update quantity:', errors),
+        onFinish: () => {
+          isUpdating.value[item.produce_id] = false;
         },
       }
     );
@@ -70,9 +62,10 @@ export function useCart() {
 
   return {
     cartItems,
-    cartCount: computedCartCount,
+    cartCount,
     isAdding,
-    addedProductId,
+    isUpdating,
     addToCart,
+    updateQuantity,
   };
 }

@@ -9,11 +9,6 @@ use Inertia\Inertia;
 
 class CartController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -24,27 +19,54 @@ class CartController extends Controller
         $user = $request->user();
         $produce = Produce::findOrFail($request->produce_id);
 
-        try {
-            $cartItem = Cart::where('user_id', $user->id)
-                ->where('produce_id', $request->produce_id)
-                ->first();
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('produce_id', $request->produce_id)
+            ->first();
 
-            if ($cartItem) {
-                $cartItem->update([
-                    'quantity' => $cartItem->quantity + $request->quantity,
-                ]);
-            } else {
-                Cart::create([
-                    'user_id' => $user->id,
-                    'produce_id' => $request->produce_id,
-                    'quantity' => $request->quantity,
-                ]);
-            }
-
-            return redirect()->back()->with('success', 'Item added to cart!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to add item to cart. Please try again.');
+        if ($cartItem) {
+            $cartItem->update([
+                'quantity' => $cartItem->quantity + $request->quantity,
+            ]);
+        } else {
+            Cart::create([
+                'user_id' => $user->id,
+                'produce_id' => $request->produce_id,
+                'quantity' => $request->quantity,
+            ]);
         }
+
+        return redirect()->back()->with('success', 'Item added to cart!');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'produce_id' => 'required|exists:produce,id',
+            'change' => 'required|integer|in:-1,1',
+        ]);
+
+        $user = $request->user();
+        $cartItem = Cart::where('user_id', $user->id)
+            ->where('produce_id', $request->produce_id)
+            ->first();
+
+        if ($cartItem) {
+            if ($request->change === 1) {
+                $cartItem->update(['quantity' => $cartItem->quantity + 1]);
+                $message = 'Item quantity increased!';
+            } else {
+                if ($cartItem->quantity > 1) {
+                    $cartItem->update(['quantity' => $cartItem->quantity - 1]);
+                    $message = 'Item quantity reduced!';
+                } else {
+                    $cartItem->delete();
+                    $message = 'Item removed from cart!';
+                }
+            }
+            return redirect()->back()->with('success', $message);
+        }
+
+        return redirect()->back()->with('error', 'Item not found in cart.');
     }
 
     public function index()

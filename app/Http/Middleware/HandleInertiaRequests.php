@@ -40,20 +40,20 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
             ],
             'cartItems' => $request->user() ? Cart::where('user_id', $request->user()->id)
-                ->with('produce')
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'produce_id' => $item->produce_id,
-                        'name' => $item->produce->name,
-                        'price' => $item->produce->price,
-                        'quantity' => $item->quantity,
-                        'imageSrc' => $item->produce->imageSrc,
-                        'imageAlt' => $item->produce->imageAlt,
-                    ];
-                })->toArray() : [],
-            'cartCount' => $request->user() ? Cart::where('user_id', $request->user()->id)->count() : 0,
+    ->with('produce')
+    ->get()
+    ->map(function ($item) {
+        return [
+            'id' => $item->id,
+            'produce_id' => $item->produce_id,
+            'name' => $item->produce->name,
+            'price' => '$' . number_format($item->produce->price, 2),
+            'quantity' => $item->quantity,
+            'imageSrc' => $item->produce->image_path ? asset('storage/' . $item->produce->image_path) : 'https://via.placeholder.com/150',
+            'imageAlt' => $item->produce->name . ' image',
+        ];
+    })->toArray() : [],
+'cartCount' => $request->user() ? Cart::where('user_id', $request->user()->id)->count() : 0,
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
