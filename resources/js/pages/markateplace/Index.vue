@@ -6,7 +6,10 @@ import Navbar from '@/components/Navbar.vue';
 import footerr from '@/components/home/footerr.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import { Search, Filter } from 'lucide-vue-next';
-
+import MainLayout from '@/layouts/MainLayout.vue';
+defineOptions({
+  layout: MainLayout,
+});
 const props = defineProps({
     products: Object,
     categories: Array,

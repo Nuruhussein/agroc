@@ -35,6 +35,10 @@ class ProduceController extends Controller
         ]);
     }
 
+  
+
+ 
+
     public function create()
     {
         // return Inertia::render('Produce/Create');
