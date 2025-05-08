@@ -2,89 +2,87 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Produce;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Cart;
 class OrderController extends Controller
-{ public function index(Request $request)
+{
+    public function index()
     {
-        $search = $request->input('search', '');
-
-        \Log::info('Search request:', ['search' => $search]);
-
-        $orders = Order::with('produce.user', 'buyer')
-            ->when($search, function ($query, $search) {
-                $query->whereHas('produce', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhereHas('user', function ($q) use ($search) {
-                          $q->where('name', 'like', "%{$search}%");
-                      });
-                })
-                ->orWhere('status', 'like', "%{$search}%")
-                ->orWhere('delivery_status', 'like', "%{$search}%");
-            })
+        $orders = Order::with(['items.produce', 'buyer'])
+            ->where('buyer_id', Auth::id())
             ->latest()
             ->get();
 
-        \Log::info('Search response:', ['order_count' => count($orders)]);
-
-        return Inertia::render('Orders/Index', [
-            'orders' => $orders,
-            'filters' => [
-                'search' => $search,
-            ],
+        return inertia('Orders/Index', [
+            'orders' => $orders
         ]);
     }
-    public function create()
-{
-    // $produce = $produce->load('category'); // Eager-load the category relationship
 
-    return inertia('Orders/Create', [
-    'produce' => Produce::all(),
-    ]);
-}
-    
-public function store(Request $request)
-{
-    $request->validate([
-        'produce_id' => 'required|exists:produce,id',
-        // Remove quantity from validation since it's always 1
-    ]);
-    if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'You must be logged in to place an order.');
-    }
- 
-    if (Auth::user()->role !== 'buyer') {
-        return redirect()->route('login')->with('error', 'You must be a buyer to place an order.');
-    }
-    Order::create([
-        'buyer_id' => Auth::id(),
-        'produce_id' => $request->produce_id,
-        'quantity' => 1, // Set default quantity to 1
-        'status' => 'pending',
-        'delivery_status' => 'pending',
-    ]);
-
-    return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
-}
-
-    public function update(Request $request, Order $order)
+    public function store(Request $request)
     {
-        $order->update($request->only(['status', 'delivery_status']));
-        return redirect()->route('orders.index');
+        $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.produce_id' => 'required|exists:produce,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'shipping_address' => 'required|string',
+            'billing_address' => 'required|string'
+        ]);
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to place an order.');
+        }
+
+        return DB::transaction(function () use ($request) {
+            $order = Order::create([
+                'buyer_id' => Auth::id(),
+                'total_amount' => 0,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+                'shipping_address' => $request->shipping_address,
+                'billing_address' => $request->billing_address
+            ]);
+
+            $totalAmount = 0;
+
+            foreach ($request->items as $item) {
+                $produce = Produce::findOrFail($item['produce_id']);
+                $itemTotal = $produce->price * $item['quantity'];
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'produce_id' => $item['produce_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $produce->price,
+                    'total_price' => $itemTotal,
+                ]);
+
+                $totalAmount += $itemTotal;
+            }
+
+            $order->update(['total_amount' => $totalAmount]);
+
+            // Clear the cart
+            if ($request->has('clear_cart') && $request->clear_cart) {
+                // Implement your cart clearing logic here
+                Cart::where('user_id', Auth::id())->delete();
+            }
+
+            return redirect()->route('orders.show', $order->id)
+                ->with('success', 'Order placed successfully!');
+        });
     }
 
-    public function destroy(Order $order)
-    {
-        $order->delete();
-        return redirect()->route('orders.index');
-    }
     public function show(Order $order)
     {
-        return Inertia::render('Orders/Show', [
-            'order' => $order->load('produce.user'),
+        $order->load(['items.produce', 'buyer']);
+
+        return inertia('Orders/Show', [
+            'order' => $order
         ]);
     }
+    
 }

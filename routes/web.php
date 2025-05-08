@@ -30,7 +30,7 @@ Route::resource('produce', ProduceController::class)->only(['index', 'show']);
 
 Route::resource('orders', OrderController::class)->except(['store']);
 Route::post('orders', [OrderController::class, 'store'])
-    ->middleware(['auth', 'buyer'])
+    // ->middleware(['auth', 'buyer'])
     ->name('orders.store');
 
 Route::resource('categories', CategoryController::class);

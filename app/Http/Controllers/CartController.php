@@ -79,7 +79,7 @@ class CartController extends Controller
                     'id' => $item->id,
                     'produce_id' => $item->produce_id,
                     'name' => $item->produce->name,
-                    'price' => '$' . number_format($item->produce->price, 2),
+                    'price' => number_format($item->produce->price, 2),
                     'quantity' => $item->quantity,
                     'imageSrc' => $item->produce->image_path ? asset('storage/' . $item->produce->image_path) : 'https://via.placeholder.com/150',
                     'imageAlt' => $item->produce->name . ' image',
