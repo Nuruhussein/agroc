@@ -8,7 +8,7 @@ import FeaturedProduct from '@/components/home/feauteredproduct.vue';
 import Statistics from '@/components/home/statistics.vue';
 import Price from '@/components/home/price.vue';
 import Cta from '@/components/home/cta.vue';
-import Footerr from '@/components/home/footerr.vue';
+import Footerr from '@/components/home/footer.vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 
 // Access Inertia props

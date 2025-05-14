@@ -47,11 +47,13 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produce</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">buyer</th>
+
+                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produce</th> -->
+                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th> -->
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+                <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th> -->
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -59,22 +61,25 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ order.order_number }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ order.buyer.name }}
+                </td>
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <span v-if="order.items && order.items[0] && order.items[0].produce">
                     {{ order.items[0].produce.name }}
                   </span>
                   <span v-else>
                     N/A
                   </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                </td> -->
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span v-if="order.items && order.items[0]">
                     {{ order.items[0].quantity }}
                   </span>
                   <span v-else>
                     N/A
                   </span>
-                </td>
+                </td> -->
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span
                     :class="{
@@ -87,26 +92,27 @@
                     {{ order.status.charAt(0).toUpperCase() + order.status.slice(1) }}
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span
-                    :class="{
-                      'bg-green-100 text-green-800': order.delivery_status === 'delivered',
-                      'bg-yellow-100 text-yellow-800': order.delivery_status === 'shipped',
-                      'bg-gray-100 text-gray-800': order.delivery_status === 'pending',
-                    }"
-                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-                  >
-                    {{ order.delivery_status.charAt(0).toUpperCase() + order.delivery_status.slice(1) }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+  <span
+    :class="{
+      'bg-green-100 text-green-800': order.delivered_quantity === order.total_quantity,
+      'bg-yellow-100 text-yellow-800': order.delivered_quantity > 0 && order.delivered_quantity < order.total_quantity,
+      'bg-gray-100 text-gray-800': order.delivered_quantity === 0,
+    }"
+    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+  >
+    {{ order.delivered_quantity }} of {{ order.total_quantity }} delivered
+  </span>
+</td>
+
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span v-if="order.items && order.items[0] && order.items[0].produce && order.items[0].produce.user">
                     {{ order.items[0].produce.user.name }}
                   </span>
                   <span v-else>
                     N/A
                   </span>
-                </td>
+                </td> -->
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     ${{ order.total_amount }}
                 </td>

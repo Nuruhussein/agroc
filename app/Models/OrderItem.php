@@ -13,7 +13,8 @@ class OrderItem extends Model
         'produce_id',
         'quantity',
         'unit_price',
-        'total_price'
+        'total_price',
+        'delivery_status',
     ];
     protected $model = OrderItem::class;  // Add this
     public function order()

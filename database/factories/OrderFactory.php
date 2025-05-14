@@ -14,7 +14,7 @@ class OrderFactory extends Factory
             'order_number' => 'ORD-' . now()->format('Ymd') . '-' . strtoupper(uniqid()),
             'total_amount' => 0, // Will be updated after items are added
             'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'cancelled']),
-            'delivery_status' => $this->faker->randomElement(['pending', 'shipped', 'delivered']),
+            // 'delivery_status' => $this->faker->randomElement(['pending', 'shipped', 'delivered']),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
@@ -35,13 +35,7 @@ class OrderFactory extends Factory
         });
     }
 
-    public function pending()
-    {
-        return $this->state([
-            'status' => 'pending',
-            'delivery_status' => 'pending',
-        ]);
-    }
+  
 
     public function completed()
     {

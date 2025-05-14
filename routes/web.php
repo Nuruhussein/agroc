@@ -12,7 +12,9 @@ use App\Http\Controllers\PriceGuideController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\BuyerDashboardController;
 
+use App\Http\Controllers\FarmerOrderController;
 Route::get('/', [HomeController::class, 'featured'])->name('home');
 
 Route::get('/roletest', function () {
@@ -23,10 +25,22 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['farmer'])->group(function () {
-    Route::resource('produce', ProduceController::class)->except(['index', 'show']);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/buyerdashboard', [BuyerDashboardController::class, 'buyerDashboard'])->name('buyer.dashboard');
 });
-Route::resource('produce', ProduceController::class)->only(['index', 'show']);
+Route::middleware(['adminOrFarmer'])->group(function () {
+    Route::resource('produce', ProduceController::class);
+});
+
+
+
+// Routes for Farmer's Order Management
+Route::middleware(['auth', 'farmer'])->prefix('farmer')->group(function () {
+    Route::get('/orders', [FarmerOrderController::class, 'index'])->name('farmer.orders.index');
+    Route::get('/orders/{orderId}', [FarmerOrderController::class, 'show'])->name('farmer.orders.show');
+Route::post('/orders/{orderId}/items/{orderItemId}/status', [FarmerOrderController::class, 'updateOrderItemStatus'])->name('farmer.orders.updateStatus');
+});
+
 
 Route::resource('orders', OrderController::class)->except(['store']);
 Route::post('orders', [OrderController::class, 'store'])

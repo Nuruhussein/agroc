@@ -9,6 +9,7 @@ export function useCart() {
   const cartCount = computed(() => cartItems.value.length);
   const isAdding = ref({});
   const isUpdating = ref({});
+  const addedProductId = ref(null); // New state to track last added product
 
   const addToCart = (item) => {
     if (!user.value) {
@@ -26,6 +27,10 @@ export function useCart() {
         preserveScroll: true,
         onSuccess: (page) => {
           cartItems.value = page.props.cartItems || cartItems.value;
+          addedProductId.value = item.id; // Set the added product ID
+          setTimeout(() => {
+            addedProductId.value = null; // Clear after 1 second
+          }, 1000);
         },
         onError: (errors) => console.error('Failed to add to cart:', errors),
         onFinish: () => {
@@ -65,6 +70,7 @@ export function useCart() {
     cartCount,
     isAdding,
     isUpdating,
+    addedProductId, // Expose addedProductId
     addToCart,
     updateQuantity,
   };

@@ -10,17 +10,40 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Cart;
 class OrderController extends Controller
 {
-    public function index()
-    {
-        $orders = Order::with(['items.produce', 'buyer'])
-            ->where('buyer_id', Auth::id())
-            ->latest()
-            ->get();
+    // public function index()
+    // {
+    //     $orders = Order::with(['items.produce', 'buyer'])
+    //         ->where('buyer_id', Auth::id())
+    //         ->latest()
+    //         ->get();
 
-        return inertia('Orders/Index', [
-            'orders' => $orders
-        ]);
-    }
+    //     return inertia('Orders/Index', [
+    //         'orders' => $orders
+    //     ]);
+    // }
+ public function index()
+{
+    $query = Order::with(['items.produce.user', 'buyer'])->latest();
+
+   if (Auth::user()->role !== 'admin') {
+    $query->where('buyer_id', Auth::id());
+}
+
+
+    $orders = $query->get()->map(function ($order) {
+        $order->total_quantity = $order->items->sum('quantity');
+        $order->delivered_quantity = $order->items
+            ->where('delivery_status', 'delivered')
+            ->sum('quantity');
+        return $order;
+    });
+
+    return inertia('Orders/Index', [
+        'orders' => $orders,
+    ]);
+}
+
+
 
     public function store(Request $request)
     {
@@ -76,13 +99,27 @@ class OrderController extends Controller
         });
     }
 
-    public function show(Order $order)
-    {
-        $order->load(['items.produce', 'buyer']);
+public function show(Order $order)
+{
+    $user = Auth::user();
 
-        return inertia('Orders/Show', [
-            'order' => $order
-        ]);
+    // Restrict access to buyers (unless admin)
+    if ($user->role !== 'admin' && $order->buyer_id !== $user->id) {
+        abort(403, 'Unauthorized access to this order.');
     }
+
+    $order->load(['items.produce.user', 'buyer']);
+
+    return inertia('Orders/Show', [
+        'order' => $order
+    ]);
+}
+
+
+
+
+
+
+
     
 }

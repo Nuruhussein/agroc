@@ -18,7 +18,7 @@ Schema::create('orders', function (Blueprint $table) {
     $table->string('order_number')->unique();
     $table->decimal('total_amount', 10, 2);
     $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
-    $table->string('delivery_status')->default('pending');
+
 
     $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
     $table->text('shipping_address')->nullable();
@@ -34,6 +34,8 @@ Schema::create('order_items', function (Blueprint $table) {
     $table->integer('quantity');
     $table->decimal('unit_price', 10, 2);
     $table->decimal('total_price', 10, 2);
+    $table->enum('delivery_status', ['pending', 'shipped', 'delivered'])->default('pending');
+
     $table->timestamps();
 });
         

@@ -86,7 +86,7 @@ defineOptions({
 });
 
 
-import Footerr from '@/components/home/footerr.vue';
+import Footerr from '@/components/home/footer.vue';
 
 const props = defineProps({
   cartItems: {

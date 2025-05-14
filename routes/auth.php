@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
    // Registration Routes
-Route::get('register', [RegisteredUserController::class, 'create'])
-->name('register');
+// Route::get('register', [RegisteredUserController::class, 'create'])
+// ->name('register');
 
 Route::get('register/farmer', [RegisteredUserController::class, 'create'])
 ->name('register.farmer');

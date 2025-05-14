@@ -3,6 +3,9 @@
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\BuyerMiddleware;
 use App\Http\Middleware\FarmerMiddleware;
+use App\Http\Middleware\AdminOrBuyerMiddleware;
+use App\Http\Middleware\AdminOrBuyerOrFarmerMiddleware;
+use App\Http\Middleware\AdminOrFarmerMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -32,6 +35,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
             'farmer' => FarmerMiddleware::class,
             'buyer' => BuyerMiddleware::class,
+            'adminOrFarmer' => \App\Http\Middleware\AdminOrFarmerMiddleware::class,
+            'adminOrBuyer' => \App\Http\Middleware\AdminOrBuyerMiddleware::class,
+            'adminOrBuyerOrFarmer' => \App\Http\Middleware\AdminOrBuyerOrFarmerMiddleware::class,
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         ]);

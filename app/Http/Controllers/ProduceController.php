@@ -2,27 +2,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produce;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-// use App\Models\Produce;
-use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ProduceController extends Controller
 {
-
- 
     public function index(Request $request)
     {
         $search = $request->input('search', '');
 
-        $produce = Produce::with('user','category')
-            ->when($search, function ($query, $search) {
+        $query = Produce::with('user', 'category');
+
+        // Restrict farmers to their own produce
+        if (Auth::user()->role !== 'admin') {
+            $query->where('user_id', Auth::id());
+        }
+
+        $produce = $query->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('category', 'like', "%{$search}%");
+                      ->orWhereHas('category', function ($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
+                      });
             })
-            
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -32,72 +36,108 @@ class ProduceController extends Controller
             'filters' => [
                 'search' => $search,
             ],
+            'isAdmin' => Auth::user()->role === 'admin', // Pass admin status to frontend
         ]);
     }
-
-  
-
- 
 
     public function create()
     {
-        // return Inertia::render('Produce/Create');
-        // In your controller
-return Inertia::render('Produce/Create', [
-    'categories' => Category::all(), // or whatever your category model is
-]);
+        return Inertia::render('Produce/Create', [
+            'categories' => Category::all(),
+        ]);
     }
 
-   public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'price' => 'required|numeric|min:0',
-        'quantity' => 'required|integer|min:1',
-    ]);
-   
-    try {
-        Produce::create([
-            'user_id' => Auth::id(),
-            'name' => $validated['name'],
-            'category_id' => $validated['category_id'],
-            'price' => $validated['price'],
-            'quantity' => $validated['quantity'],
-            'image_path' => 'default.jpg',
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:1',
         ]);
 
-        return redirect()
-            ->route('produce.index')
-            ->with('success', 'Produce added successfully!');
-    } catch (\Exception $e) {
-        return back()->withErrors(['category_id' => 'Failed to create produce. Please ensure the selected category is valid.']);
+        try {
+            Produce::create([
+                'user_id' => Auth::id(), // Always associate with the authenticated user
+                'name' => $validated['name'],
+                'category_id' => $validated['category_id'],
+                'price' => $validated['price'],
+                'quantity' => $validated['quantity'],
+                'image_path' => 'default.jpg',
+            ]);
+
+            return redirect()
+                ->route('produce.index')
+                ->with('success', 'Produce added successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error creating produce: ' . $e->getMessage());
+            return back()->withErrors(['category_id' => 'Failed to create produce. Please ensure the selected category is valid.']);
+        }
     }
-}
+
+    public function show(Produce $produce)
+    {
+        // Restrict farmers to their own produce
+        if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return Inertia::render('Produce/Show', [
+            'produce' => $produce->load('user', 'category'),
+            'isAdmin' => Auth::user()->role === 'admin', // Pass admin status
+        ]);
+    }
+
     public function edit(Produce $produce)
     {
-        return Inertia::render('Produce/Edit', ['produce' => $produce]);
+        // Restrict farmers to their own produce
+        if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return Inertia::render('Produce/Edit', [
+            'produce' => $produce,
+            'categories' => Category::all(),
+            'isAdmin' => Auth::user()->role === 'admin', // Pass admin status
+        ]);
     }
 
     public function update(Request $request, Produce $produce)
     {
-        $produce->update($request->validate([
-            'name' => 'required',
-            'category' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-        ]));
+        // Restrict farmers to their own produce
+        if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-        return redirect()->route('produce.index');
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $produce->update([
+            'name' => $validated['name'],
+            'category_id' => $validated['category_id'],
+            'price' => $validated['price'],
+            'quantity' => $validated['quantity'],
+        ]);
+
+        return redirect()
+            ->route('produce.index')
+            ->with('success', 'Produce updated successfully!');
     }
 
     public function destroy(Produce $produce)
     {
+        // Restrict farmers to their own produce
+        if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $produce->delete();
-        return redirect()->route('produce.index');
+        return redirect()
+            ->route('produce.index')
+            ->with('success', 'Produce deleted successfully!');
     }
-    public function show(Produce $produce)
-{
-    return Inertia::render('Produce/Show', ['produce' => $produce->load('user','category')]);
-}
 }
