@@ -5,7 +5,7 @@
       <div class="flex my-24 justify-between items-center">
         <h2 class="text-2xl font-bold tracking-tight text-gray-900">Featured Products</h2>
         <a
-          href="/produce"
+          href="/markateplace"
           class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center"
         >
           View All

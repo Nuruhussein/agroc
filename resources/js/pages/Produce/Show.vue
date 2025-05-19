@@ -11,7 +11,8 @@ import {
   Package,
   MapPin,
   FileText,
-  Image as ImageIcon
+  Image as ImageIcon,
+  User
 } from 'lucide-vue-next';
 
 const breadcrumbs = [
@@ -29,7 +30,7 @@ defineProps({
 </script>
 
 <template>
-    <Head :title="produce.name" />
+    <Head :title="produce.name || 'Produce Details'" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
@@ -43,7 +44,7 @@ defineProps({
                         Back to produce
                     </Link>
                     <div class="flex items-center gap-3">
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ produce.name }}</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ produce.name || 'Unnamed Produce' }}</h1>
                         <span 
                             v-if="produce.organic"
                             class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800"
@@ -81,6 +82,18 @@ defineProps({
                         <div class="space-y-6">
                             <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
                                 <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
+                                    <User class="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-500">Farmer</h4>
+                                    <p class="mt-1 text-base font-medium text-gray-900">
+                                        {{ produce.user?.name || 'N/A' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                                <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
                                     <Tag class="h-5 w-5" />
                                 </div>
                                 <div>
@@ -98,7 +111,7 @@ defineProps({
                                         Current Price
                                     </h4>
                                     <p class="mt-1 text-xl font-bold text-gray-900">
-                                        ${{ Number(produce.price).toFixed(2) }}
+                                        ${{ produce.price ? Number(produce.price).toFixed(2) : 'N/A' }}
                                     </p>
                                 </div>
 
@@ -108,7 +121,7 @@ defineProps({
                                         Original Price
                                     </h4>
                                     <p class="mt-1 text-lg font-medium text-gray-500 line-through">
-                                        ${{ Number(produce.original_price).toFixed(2) }}
+                                        ${{ produce.original_price ? Number(produce.original_price).toFixed(2) : 'N/A' }}
                                     </p>
                                 </div>
                             </div>
@@ -120,7 +133,7 @@ defineProps({
                                         Discount
                                     </h4>
                                     <p class="mt-1 text-lg font-bold text-rose-600">
-                                        {{ produce.discount }}%
+                                        {{ produce.discount ? `${produce.discount}%` : 'None' }}
                                     </p>
                                 </div>
 
@@ -130,7 +143,7 @@ defineProps({
                                         Quantity
                                     </h4>
                                     <p class="mt-1 text-lg font-medium text-gray-900">
-                                        {{ produce.quantity }}
+                                        {{ produce.quantity || 'N/A' }}
                                     </p>
                                 </div>
                             </div>
@@ -144,7 +157,7 @@ defineProps({
                                     Farm Location
                                 </h4>
                                 <p class="mt-1 text-base font-medium text-gray-900">
-                                    {{ produce.farm_name }} • {{ produce.location }}
+                                    {{ produce.farm_name ? `${produce.farm_name} • ${produce.location || 'N/A'}` : produce.location || 'N/A' }}
                                 </p>
                             </div>
 
@@ -154,7 +167,7 @@ defineProps({
                                     Description
                                 </h4>
                                 <p class="text-base text-gray-700">
-                                    {{ produce.description }}
+                                    {{ produce.description || 'No description provided.' }}
                                 </p>
                             </div>
 
@@ -165,11 +178,18 @@ defineProps({
                                 </h4>
                                 <div class="mt-2 overflow-hidden rounded-lg border border-gray-200">
                                     <img 
-                                        :src="produce.image_path" 
-                                        :alt="produce.name" 
+                                        :src="`/storage/${produce.image_path}`" 
+                                        :alt="produce.name || 'Produce Image'" 
                                         class="w-full h-auto object-cover transition-all hover:scale-105"
                                     />
                                 </div>
+                            </div>
+                            <div v-else class="p-4 bg-gray-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500 flex items-center gap-1 mb-2">
+                                    <ImageIcon class="h-4 w-4" />
+                                    Product Image
+                                </h4>
+                                <p class="text-base text-gray-700">No image available.</p>
                             </div>
                         </div>
                     </div>

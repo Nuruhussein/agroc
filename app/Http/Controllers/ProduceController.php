@@ -47,46 +47,64 @@ class ProduceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
-        ]);
+   public function store(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'category_id' => 'required|exists:categories,id',
+        'location' => 'nullable|string|max:255',
+        'farm_name' => 'nullable|string|max:255',
+        'description' => 'nullable|string',
+        'price' => 'required|numeric|min:0',
+        'original_price' => 'nullable|numeric|min:0',
+        'discount' => 'nullable|numeric|min:0|max:100',
+        'organic' => 'boolean',
+        'quantity' => 'required|integer|min:1',
+        'image' => 'nullable|image|max:2048',
+    ]);
 
-        try {
-            Produce::create([
-                'user_id' => Auth::id(), // Always associate with the authenticated user
-                'name' => $validated['name'],
-                'category_id' => $validated['category_id'],
-                'price' => $validated['price'],
-                'quantity' => $validated['quantity'],
-                'image_path' => 'default.jpg',
-            ]);
-
-            return redirect()
-                ->route('produce.index')
-                ->with('success', 'Produce added successfully!');
-        } catch (\Exception $e) {
-            Log::error('Error creating produce: ' . $e->getMessage());
-            return back()->withErrors(['category_id' => 'Failed to create produce. Please ensure the selected category is valid.']);
-        }
-    }
-
-    public function show(Produce $produce)
-    {
-        // Restrict farmers to their own produce
-        if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+    try {
+        $imagePath = 'default.jpg';
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('produce_images', 'public');
         }
 
-        return Inertia::render('Produce/Show', [
-            'produce' => $produce->load('user', 'category'),
-            'isAdmin' => Auth::user()->role === 'admin', // Pass admin status
+        Produce::create([
+            'user_id' => Auth::id(),
+            'name' => $validated['name'],
+            'category_id' => $validated['category_id'],
+            'location' => $validated['location'] ?? null,
+            'farm_name' => $validated['farm_name'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'original_price' => $validated['original_price'] ?? null,
+            'discount' => $validated['discount'] ?? null,
+            'organic' => $validated['organic'] ?? false,
+            'quantity' => $validated['quantity'],
+            'image_path' => $imagePath,
         ]);
+
+        return redirect()
+            ->route('produce.index')
+            ->with('success', 'Produce added successfully!');
+    } catch (\Exception $e) {
+        Log::error('Error creating produce: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Failed to create produce. Please try again.']);
     }
+}
+
+ public function show(Produce $produce)
+{
+    // Restrict farmers to their own produce
+    if (Auth::user()->role !== 'admin' && $produce->user_id !== Auth::id()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    return Inertia::render('Produce/Show', [
+        'produce' => $produce->load('user', 'category'),
+        'isAdmin' => Auth::user()->role === 'admin',
+    ]);
+}
 
     public function edit(Produce $produce)
     {

@@ -46,6 +46,11 @@ const allNavItems: NavItem[] = [
     icon: ClipboardList,
   },
     {
+    title: 'manage Users',
+    href: route('admin.users'),
+    icon: ClipboardList,
+  },
+    {
     title: 'my Orders',
     href: route('farmer.orders.index'),
     icon: ClipboardList,
@@ -65,7 +70,7 @@ const mainNavItems = computed(() => {
     case 'admin':
       return  allNavItems.filter((item) => item.title !== 'my Orders');
     case 'farmer':
-      return allNavItems.filter((item) => item.title !== 'Category' && item.title !== 'Orders');
+      return allNavItems.filter((item) => item.title !== 'Category' && item.title !== 'Orders' && item.title !== 'manage Users');
     default:
       return []; // Unknown role
   }

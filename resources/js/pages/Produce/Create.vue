@@ -1,3 +1,81 @@
+
+
+<script>
+import { Head, useForm } from '@inertiajs/vue3';
+import AppLayout from '@/layouts/AppLayout.vue';
+
+export default {
+  components: {
+    Head,
+    AppLayout,
+  },
+  
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+      default: () => []
+    }
+  },
+  
+  mounted() {
+    console.log('Categories:', this.categories);
+  },
+  
+  data() {
+    return {
+      breadcrumbs: [
+        { title: 'Dashboard', href: '/dashboard' },
+        { title: 'Produce', href: '/produce' },
+        { title: 'Add Produce', href: '' },
+      ],
+      form: useForm({
+        name: '',
+        category_id: '',
+        location: '',
+        farm_name: '',
+        description: '',
+        price: '',
+        original_price: '',
+        discount: '',
+        organic: false,
+        quantity: '',
+        image: null,
+      })
+    }
+  },
+  
+  methods: {
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file;
+      }
+    },
+    submit() {
+      console.log('Form data:', this.form.data());
+      const formData = new FormData();
+      Object.keys(this.form.data()).forEach(key => {
+        if (key === 'image' && this.form.image) {
+          formData.append(key, this.form.image);
+        } else if (key === 'organic') {
+          formData.append(key, this.form.organic ? '1' : '0'); // Convert boolean to 1/0
+        } else if (this.form[key] !== null && this.form[key] !== '') {
+          formData.append(key, this.form[key]);
+        }
+      });
+
+      this.form
+        .transform(() => formData)
+        .post(this.route('produce.store'), {
+          preserveScroll: true,
+          onSuccess: () => this.form.reset(),
+          forceFormData: true,
+        });
+    }
+  }
+}
+</script>
 <template>
   <Head title="Add Produce" />
   <AppLayout :breadcrumbs="breadcrumbs">
@@ -47,6 +125,50 @@
             </div>
 
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <!-- Location Field -->
+              <div>
+                <label for="locationme/location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                <input
+                  id="location"
+                  v-model="form.location"
+                  type="text"
+                  placeholder="e.g., Kisumu, Kenya"
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
+                  :class="{ 'border-red-500': form.errors.location }"
+                />
+                <p v-if="form.errors.location" class="mt-2 text-sm text-red-600">{{ form.errors.location }}</p>
+              </div>
+
+              <!-- Farm Name Field -->
+              <div>
+                <label for="farm_name" class="block text-sm font-medium text-gray-700 mb-1">Farm Name</label>
+                <input
+                  id="farm_name"
+                  v-model="form.farm_name"
+                  type="text"
+                  placeholder="e.g., Green Valley Farm"
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
+                  :class="{ 'border-red-500': form.errors.farm_name }"
+                />
+                <p v-if="form.errors.farm_name" class="mt-2 text-sm text-red-600">{{ form.errors.farm_name }}</p>
+              </div>
+            </div>
+
+            <!-- Description Field -->
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                id="description"
+                v-model="form.description"
+                rows="4"
+                placeholder="Describe your produce..."
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
+                :class="{ 'border-red-500': form.errors.description }"
+              ></textarea>
+              <p v-if="form.errors.description" class="mt-2 text-sm text-red-600">{{ form.errors.description }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <!-- Price Field -->
               <div>
                 <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
@@ -69,6 +191,45 @@
                 <p v-if="form.errors.price" class="mt-2 text-sm text-red-600">{{ form.errors.price }}</p>
               </div>
 
+              <!-- Original Price Field -->
+              <div>
+                <label for="original_price" class="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+                <div class="relative rounded-md shadow-sm">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">$</span>
+                  </div>
+                  <input
+                    id="original_price"
+                    v-model="form.original_price"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
+                    :class="{ 'border-red-500': form.errors.original_price }"
+                  />
+                </div>
+                <p v-if="form.errors.original_price" class="mt-2 text-sm text-red-600">{{ form.errors.original_price }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <!-- Discount Field -->
+              <div>
+                <label for="discount" class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+                <input
+                  id="discount"
+                  v-model="form.discount"
+                  type="number"
+                  min="0"
+                  max="100"
+                  placeholder="e.g., 10"
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
+                  :class="{ 'border-red-500': form.errors.discount }"
+                />
+                <p v-if="form.errors.discount" class="mt-2 text-sm text-red-600">{{ form.errors.discount }}</p>
+              </div>
+
               <!-- Quantity Field -->
               <div>
                 <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
@@ -84,6 +245,36 @@
                 />
                 <p v-if="form.errors.quantity" class="mt-2 text-sm text-red-600">{{ form.errors.quantity }}</p>
               </div>
+            </div>
+
+            <!-- Organic Field -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Organic</label>
+              <div class="flex items-center">
+                <input
+                  id="organic"
+                  v-model="form.organic"
+                  type="checkbox"
+                  class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                />
+                <label for="organic" class="ml-2 block text-sm text-gray-900">
+                  This produce is organic
+                </label>
+              </div>
+              <p v-if="form.errors.organic" class="mt-2 text-sm text-red-600">{{ form.errors.organic }}</p>
+            </div>
+
+            <!-- Image Upload Field -->
+            <div>
+              <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+              <input
+                id="image"
+                type="file"
+                accept="image/*"
+                @change="handleImageUpload"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+              <p v-if="form.errors.image_path" class="mt-2 text-sm text-red-600">{{ form.errors.image_path }}</p>
             </div>
 
             <!-- Form Actions -->
@@ -113,57 +304,3 @@
     </div>
   </AppLayout>
 </template>
-
-<script>
-import { Head, useForm } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-
-export default {
-  components: {
-    Head,
-    AppLayout,
-  },
-  
-  props: {
-    categories: {
-      type: Array,
-      required: true,
-      default: () => []
-    }
-  },
-  
-  mounted() {
-    console.log('Categories:', this.categories); // Debug categories
-  },
-  
-  data() {
-    return {
-      breadcrumbs: [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Produce', href: '/produce' },
-        { title: 'Add Produce', href: '' },
-      ],
-      form: useForm({
-        name: '',
-        category_id: '',
-        price: '',
-        quantity: '',
-      })
-    }
-  },
-  
-  methods: {
-    submit() {
-      console.log('Form data:', this.form); // Debug form data
-      this.form.transform((data) => ({
-        ...data,
-        price: data.price ? parseFloat(data.price) : null,
-        quantity: data.quantity ? parseInt(data.quantity, 10) : null,
-      })).post(this.route('produce.store'), {
-        preserveScroll: true,
-        onSuccess: () => this.form.reset(),
-      });
-    }
-  }
-}
-</script>

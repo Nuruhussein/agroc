@@ -13,6 +13,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\BuyerDashboardController;
+use App\Http\Controllers\UserManagementController;
 
 use App\Http\Controllers\FarmerOrderController;
 Route::get('/', [HomeController::class, 'featured'])->name('home');
@@ -41,6 +42,15 @@ Route::middleware(['auth', 'farmer'])->prefix('farmer')->group(function () {
 Route::post('/orders/{orderId}/items/{orderItemId}/status', [FarmerOrderController::class, 'updateOrderItemStatus'])->name('farmer.orders.updateStatus');
 });
 
+
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users');
+    Route::get('/users/{user}', [UserManagementController::class, 'show'])->name('admin.users.show');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('admin.users.store');
+    Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+});
 
 Route::resource('orders', OrderController::class)->except(['store']);
 Route::post('orders', [OrderController::class, 'store'])
