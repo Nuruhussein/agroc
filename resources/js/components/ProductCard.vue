@@ -37,7 +37,9 @@ const showCartTooltip = ref(false);
     <!-- Product Image -->
     <div class="relative aspect-square overflow-hidden">
       <img
-        :src="product.image_path"
+        v-if="product.image_path"
+                 :src="`/storage/${product.image_path}`" 
+
         :alt="product.name"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />

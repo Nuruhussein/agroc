@@ -30,7 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/buyerdashboard', [BuyerDashboardController::class, 'buyerDashboard'])->name('buyer.dashboard');
 });
 Route::middleware(['adminOrFarmer'])->group(function () {
-    Route::resource('produce', ProduceController::class);
+    // Register all resource routes except 'update'
+    Route::resource('produce', ProduceController::class)->except(['update']);
+    // Define custom POST route for update
+    Route::post('/produce/{produce}', [ProduceController::class, 'update'])->name('produce.update');
 });
 
 

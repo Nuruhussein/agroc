@@ -23,6 +23,7 @@ return new class extends Migration
         $table->decimal('original_price', 8, 2)->nullable();
         $table->unsignedTinyInteger('discount')->nullable();
         $table->boolean('organic')->default(false);
+          $table->string('unit')->default('kg'); // default to kilograms
         $table->integer('quantity');
         $table->string('image_path')->nullable();
         $table->timestamps();

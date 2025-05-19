@@ -41,6 +41,7 @@ export default {
         organic: false,
         quantity: '',
         image: null,
+         unit: '', // Add this
       })
     }
   },
@@ -79,7 +80,7 @@ export default {
 <template>
   <Head title="Add Produce" />
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-4xl  px-4 ml-9 sm:px-6 lg:px-8 py-8"> <!-- Changed from max-w-2xl to max-w-4xl -->
       <div class="sm:flex sm:items-center sm:justify-between mb-8">
         <div class="sm:flex-auto">
           <h1 class="text-2xl font-bold text-gray-900">Add New Produce</h1>
@@ -89,193 +90,213 @@ export default {
 
       <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="p-6 sm:p-8">
-          <form @submit.prevent="submit" class="space-y-6">
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <!-- Name Field -->
-              <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                <input
-                  id="name"
-                  v-model="form.name"
-                  type="text"
-                  placeholder="Organic Tomatoes"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.name }"
-                  required
-                />
-                <p v-if="form.errors.name" class="mt-2 text-sm text-red-600">{{ form.errors.name }}</p>
-              </div>
+         
+          <!-- ...existing code... -->
+<form @submit.prevent="submit" class="space-y-6">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <!-- Name Field -->
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+      <input
+        id="name"
+        v-model="form.name"
+        type="text"
+        placeholder="Organic Tomatoes"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        :class="{ 'border-red-500': form.errors.name }"
+        required
+      />
+      <p v-if="form.errors.name" class="mt-2 text-sm text-red-600">{{ form.errors.name }}</p>
+    </div>
 
-              <!-- Category Field -->
-              <div>
-                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                <select
-                  id="category_id"
-                  v-model="form.category_id"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  required
-                >
-                  <option value="" disabled>Select category</option>
-                  <option v-for="category in categories" :key="category.id" :value="category.id">
-                    {{ category.name }}
-                  </option>
-                </select>
-                <p v-if="form.errors.category_id" class="mt-2 text-sm text-red-600">{{ form.errors.category_id }}</p>
-              </div>
-            </div>
+    <!-- Category Field -->
+    <div>
+      <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+      <select
+        id="category_id"
+        v-model="form.category_id"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        required
+      >
+        <option value="" disabled>Select category</option>
+        <option v-for="category in categories" :key="category.id" :value="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+      <p v-if="form.errors.category_id" class="mt-2 text-sm text-red-600">{{ form.errors.category_id }}</p>
+    </div>
+  </div>
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <!-- Location Field -->
-              <div>
-                <label for="locationme/location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                <input
-                  id="location"
-                  v-model="form.location"
-                  type="text"
-                  placeholder="e.g., Kisumu, Kenya"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.location }"
-                />
-                <p v-if="form.errors.location" class="mt-2 text-sm text-red-600">{{ form.errors.location }}</p>
-              </div>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <!-- Location Field -->
+    <div>
+      <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+      <input
+        id="location"
+        v-model="form.location"
+        type="text"
+        placeholder="e.g., Kisumu, Kenya"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        :class="{ 'border-red-500': form.errors.location }"
+      />
+      <p v-if="form.errors.location" class="mt-2 text-sm text-red-600">{{ form.errors.location }}</p>
+    </div>
 
-              <!-- Farm Name Field -->
-              <div>
-                <label for="farm_name" class="block text-sm font-medium text-gray-700 mb-1">Farm Name</label>
-                <input
-                  id="farm_name"
-                  v-model="form.farm_name"
-                  type="text"
-                  placeholder="e.g., Green Valley Farm"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.farm_name }"
-                />
-                <p v-if="form.errors.farm_name" class="mt-2 text-sm text-red-600">{{ form.errors.farm_name }}</p>
-              </div>
-            </div>
+    <!-- Farm Name Field -->
+    <div>
+      <label for="farm_name" class="block text-sm font-medium text-gray-700 mb-1">Farm Name</label>
+      <input
+        id="farm_name"
+        v-model="form.farm_name"
+        type="text"
+        placeholder="e.g., Green Valley Farm"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        :class="{ 'border-red-500': form.errors.farm_name }"
+      />
+      <p v-if="form.errors.farm_name" class="mt-2 text-sm text-red-600">{{ form.errors.farm_name }}</p>
+    </div>
+  </div>
 
-            <!-- Description Field -->
-            <div>
-              <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                id="description"
-                v-model="form.description"
-                rows="4"
-                placeholder="Describe your produce..."
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                :class="{ 'border-red-500': form.errors.description }"
-              ></textarea>
-              <p v-if="form.errors.description" class="mt-2 text-sm text-red-600">{{ form.errors.description }}</p>
-            </div>
+  <!-- Description Field -->
+  <div>
+    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+    <textarea
+      id="description"
+      v-model="form.description"
+      rows="8"
+      placeholder="Describe your produce..."
+      class="block w-full max-w-2xl h-32 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+      :class="{ 'border-red-500': form.errors.description }"
+    ></textarea>
+    <p v-if="form.errors.description" class="mt-2 text-sm text-red-600">{{ form.errors.description }}</p>
+  </div>
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <!-- Price Field -->
-              <div>
-                <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
-                <div class="relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span class="text-gray-500 sm:text-sm">$</span>
-                  </div>
-                  <input
-                    id="price"
-                    v-model="form.price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="0.00"
-                    class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                    :class="{ 'border-red-500': form.errors.price }"
-                    required
-                  />
-                </div>
-                <p v-if="form.errors.price" class="mt-2 text-sm text-red-600">{{ form.errors.price }}</p>
-              </div>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <!-- Price Field -->
+    <div>
+      <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+      <div class="relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <span class="text-gray-500 text-base">$</span>
+        </div>
+        <input
+          id="price"
+          v-model="form.price"
+          type="number"
+          step="0.01"
+          min="0"
+          placeholder="0.00"
+          class="block w-full max-w-xl h-12 rounded-md border-gray-300 pl-7 pr-12 focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+          :class="{ 'border-red-500': form.errors.price }"
+          required
+        />
+      </div>
+      <p v-if="form.errors.price" class="mt-2 text-sm text-red-600">{{ form.errors.price }}</p>
+    </div>
 
-              <!-- Original Price Field -->
-              <div>
-                <label for="original_price" class="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
-                <div class="relative rounded-md shadow-sm">
-                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span class="text-gray-500 sm:text-sm">$</span>
-                  </div>
-                  <input
-                    id="original_price"
-                    v-model="form.original_price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="0.00"
-                    class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                    :class="{ 'border-red-500': form.errors.original_price }"
-                  />
-                </div>
-                <p v-if="form.errors.original_price" class="mt-2 text-sm text-red-600">{{ form.errors.original_price }}</p>
-              </div>
-            </div>
+    <!-- Original Price Field -->
+    <div>
+      <label for="original_price" class="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+      <div class="relative rounded-md shadow-sm">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <span class="text-gray-500 text-base">$</span>
+        </div>
+        <input
+          id="original_price"
+          v-model="form.original_price"
+          type="number"
+          step="0.01"
+          min="0"
+          placeholder="0.00"
+          class="block w-full max-w-xl h-12 rounded-md border-gray-300 pl-7 pr-12 focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+          :class="{ 'border-red-500': form.errors.original_price }"
+        />
+      </div>
+      <p v-if="form.errors.original_price" class="mt-2 text-sm text-red-600">{{ form.errors.original_price }}</p>
+    </div>
+  </div>
+<!-- Unit Field -->
+<div>
+  <label for="unit" class="block text-sm font-medium text-gray-700 mb-1">Unit *</label>
+  <select
+    id="unit"
+    v-model="form.unit"
+    required
+    class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+  >
+    <option value="" disabled>Select unit</option>
+    <option value="kg">Kilogram (kg)</option>
+    <option value="ton">Ton (t)</option>
+    <option value="bag">Bag</option>
+    <option value="piece">Piece</option>
+  </select>
+  <p v-if="form.errors.unit" class="mt-2 text-sm text-red-600">{{ form.errors.unit }}</p>
+</div>
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <!-- Discount Field -->
-              <div>
-                <label for="discount" class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
-                <input
-                  id="discount"
-                  v-model="form.discount"
-                  type="number"
-                  min="0"
-                  max="100"
-                  placeholder="e.g., 10"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.discount }"
-                />
-                <p v-if="form.errors.discount" class="mt-2 text-sm text-red-600">{{ form.errors.discount }}</p>
-              </div>
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <!-- Discount Field -->
+    <div>
+      <label for="discount" class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+      <input
+        id="discount"
+        v-model="form.discount"
+        type="number"
+        min="0"
+        max="100"
+        placeholder="e.g., 10"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        :class="{ 'border-red-500': form.errors.discount }"
+      />
+      <p v-if="form.errors.discount" class="mt-2 text-sm text-red-600">{{ form.errors.discount }}</p>
+    </div>
 
-              <!-- Quantity Field -->
-              <div>
-                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
-                <input
-                  id="quantity"
-                  v-model="form.quantity"
-                  type="number"
-                  min="1"
-                  placeholder="e.g., 100"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm py-2 px-3 border"
-                  :class="{ 'border-red-500': form.errors.quantity }"
-                  required
-                />
-                <p v-if="form.errors.quantity" class="mt-2 text-sm text-red-600">{{ form.errors.quantity }}</p>
-              </div>
-            </div>
+    <!-- Quantity Field -->
+    <div>
+      <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+      <input
+        id="quantity"
+        v-model="form.quantity"
+        type="number"
+        min="1"
+        placeholder="e.g., 100"
+        class="block w-full max-w-xl h-12 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-base py-3 px-4 border"
+        :class="{ 'border-red-500': form.errors.quantity }"
+        required
+      />
+      <p v-if="form.errors.quantity" class="mt-2 text-sm text-red-600">{{ form.errors.quantity }}</p>
+    </div>
+  </div>
 
-            <!-- Organic Field -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Organic</label>
-              <div class="flex items-center">
-                <input
-                  id="organic"
-                  v-model="form.organic"
-                  type="checkbox"
-                  class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                />
-                <label for="organic" class="ml-2 block text-sm text-gray-900">
-                  This produce is organic
-                </label>
-              </div>
-              <p v-if="form.errors.organic" class="mt-2 text-sm text-red-600">{{ form.errors.organic }}</p>
-            </div>
+  <!-- Organic Field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Organic</label>
+    <div class="flex items-center">
+      <input
+        id="organic"
+        v-model="form.organic"
+        type="checkbox"
+        class="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+      />
+      <label for="organic" class="ml-2 block text-sm text-gray-900">
+        This produce is organic
+      </label>
+    </div>
+    <p v-if="form.errors.organic" class="mt-2 text-sm text-red-600">{{ form.errors.organic }}</p>
+  </div>
 
-            <!-- Image Upload Field -->
-            <div>
-              <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-              <input
-                id="image"
-                type="file"
-                accept="image/*"
-                @change="handleImageUpload"
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-              />
-              <p v-if="form.errors.image_path" class="mt-2 text-sm text-red-600">{{ form.errors.image_path }}</p>
-            </div>
+  <!-- Image Upload Field -->
+  <div>
+    <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+    <input
+      id="image"
+      type="file"
+      accept="image/*"
+      @change="handleImageUpload"
+      class="block w-full max-w-xl h-12 text-base text-gray-500 file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-base file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+    />
+    <p v-if="form.errors.image_path" class="mt-2 text-sm text-red-600">{{ form.errors.image_path }}</p>
+  </div>
+<!-- ...existing code... -->
 
             <!-- Form Actions -->
             <div class="flex items-center justify-end gap-x-4 pt-6 border-t border-gray-200">
@@ -299,6 +320,7 @@ export default {
               </button>
             </div>
           </form>
+        
         </div>
       </div>
     </div>
