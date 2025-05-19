@@ -30,8 +30,7 @@
         <div v-for="product in products" :key="product.id" class="group relative">
           <div class="aspect-square w-full rounded-md bg-gray-200 overflow-hidden">
             <img
-              v-if="product.image_path"
-                 :src="`/storage/${product.image_path}`" 
+              :src ="product.imageSrc"
               :alt="product.imageAlt"
               class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
             />

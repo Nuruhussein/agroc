@@ -39,6 +39,8 @@ class HomeController extends Controller
                         'price' => '$' . number_format($item->produce->price, 2),
                         'quantity' => $item->quantity,
                         'imageSrc' => $item->produce->image_path ? asset('storage/' . $item->produce->image_path) : 'https://via.placeholder.com/150',
+                
+
                         'imageAlt' => $item->produce->name . ' image',
                     ];
                 })
