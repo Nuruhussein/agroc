@@ -14,6 +14,8 @@ use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\BuyerDashboardController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ChatController;
+
 
 use App\Http\Controllers\FarmerOrderController;
 Route::get('/', [HomeController::class, 'featured'])->name('home');
@@ -28,6 +30,11 @@ Route::get('dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/buyerdashboard', [BuyerDashboardController::class, 'buyerDashboard'])->name('buyer.dashboard');
+
+    
+     Route::get('/chat/conversations', [ChatController::class, 'conversations']);
+ Route::get('/chat/{receiverId?}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
 });
 Route::middleware(['adminOrFarmer'])->group(function () {
     // Register all resource routes except 'update'
@@ -53,6 +60,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/users', [UserManagementController::class, 'store'])->name('admin.users.store');
     Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+
+
+    Route::get('/price-guides', [PriceGuideController::class, 'priceGuideIndex'])->name('admin.price-guides.index');
+    Route::post('/price-guides/{priceGuide}', [PriceGuideController::class, 'updatePriceGuide'])->name('admin.price-guides.update');
+
 });
 
 Route::resource('orders', OrderController::class)->except(['store']);
@@ -65,7 +77,7 @@ Route::resource('categories', CategoryController::class);
 Route::resource('messages', MessageController::class);
 Route::resource('ratings', RatingController::class);
 Route::resource('notifications', NotificationController::class);
-Route::resource('price-guides', PriceGuideController::class)->only(['index']);
+// Route::resource('price-guides', PriceGuideController::class)->only(['index']);
 
 Route::get('/markateplace', [MarketController::class, 'index'])->name('markateplace');
 

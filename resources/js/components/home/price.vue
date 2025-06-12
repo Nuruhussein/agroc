@@ -1,6 +1,6 @@
 <template>
     <!-- Price Guide Preview - All in One Component -->
-    <section class="py-16 ">
+    <section class="py-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-8">
@@ -21,8 +21,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Price Card - Repeated for each item -->
           <div 
-            v-for="item in displayedPrices" 
-            :key="item.id" 
+            v-for="(item, index) in marketPrices" 
+            :key="index" 
             class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300"
           >
             <div class="p-6">
@@ -58,102 +58,44 @@
         </div>
       </div>
     </section>
-  </template>
-  
-  <script>
-  import { ref } from 'vue';
-  
-  export default {
-    name: 'PriceGuide',
-    setup() {
-      // Sample pricing data
-      const pricingData = ref([
-        {
-          id: 1,
-          commodity: 'Wheat',
-          price: '$5.42/bu',
-          change: '+2.3%',
-          trend: 'up',
-          region: 'Midwest',
-          updated: '2 days ago'
-        },
-        {
-          id: 2,
-          commodity: 'Corn',
-          price: '$4.18/bu',
-          change: '-1.1%',
-          trend: 'down',
-          region: 'Great Plains',
-          updated: '1 day ago'
-        },
-        {
-          id: 3,
-          commodity: 'Soybeans',
-          price: '$12.75/bu',
-          change: '+0.8%',
-          trend: 'up',
-          region: 'Midwest',
-          updated: '3 days ago'
-        },
-        {
-          id: 4,
-          commodity: 'Cotton',
-          price: '$0.82/lb',
-          change: '+3.5%',
-          trend: 'up',
-          region: 'Southern States',
-          updated: 'Today'
-        },
-        {
-          id: 5,
-          commodity: 'Rice',
-          price: '$13.50/cwt',
-          change: '-0.5%',
-          trend: 'down',
-          region: 'Delta States',
-          updated: '1 week ago'
-        }
-      ]);
-  
-      // Only show first 4 items for preview
-      const displayedPrices = ref(pricingData.value.slice(0, 4));
-  
-      // Determine trend color
-      const trendColor = (trend) => {
-        return trend === 'up' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-      };
-  
-      // Handle view full guide click
-      const viewFullGuide = () => {
-        // In a real app, you would navigate to the full guide page
-        console.log('Navigating to full price guide');
-        // this.$router.push('/pricing'); // If using Vue Router
-      };
-  
-      return {
-        pricingData,
-        displayedPrices,
-        trendColor,
-        viewFullGuide
-      };
-    }
-  };
-  </script>
-  
-  <style scoped>
-  /* Custom transitions */
-  .price-card {
-    transition: all 0.3s ease;
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+
+const { props } = usePage();
+
+// Get market prices from props
+const marketPrices = computed(() => props.marketPrices || []);
+
+// Determine trend color
+const trendColor = (trend) => {
+  return trend === 'up' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+};
+
+// Handle view full guide click
+const viewFullGuide = () => {
+  // In a real app, you would navigate to the full guide page
+  console.log('Navigating to full price guide');
+  // router.get('/pricing'); // If using Inertia router
+};
+</script>
+
+<style scoped>
+/* Custom transitions */
+.price-card {
+  transition: all 0.3s ease;
+}
+
+.price-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .price-header {
+    font-size: 2rem;
   }
-  
-  .price-card:hover {
-    transform: translateY(-2px);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .price-header {
-      font-size: 2rem;
-    }
-  }
-  </style>
+}
+</style>

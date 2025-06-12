@@ -27,6 +27,27 @@ class HomeController extends Controller
                 ];
             });
 
+        // Get market prices (group by category and get average prices)
+        $marketPrices = Produce::with('category')
+            ->selectRaw('category_id, AVG(price) as avg_price, COUNT(*) as count, location')
+            ->groupBy('category_id', 'location')
+            ->orderBy('count', 'desc')
+            ->take(4)
+            ->get()
+            ->map(function ($item) {
+                $change = rand(-5, 5); // Random change for demo (replace with actual calculation if you have historical data)
+                $trend = $change >= 0 ? 'up' : 'down';
+                
+                return [
+                    'commodity' => $item->category->name,
+                    'price' => '$' . number_format($item->avg_price, 2) . '/' . $item->unit,
+                    'change' => ($change >= 0 ? '+' : '') . $change . '%',
+                    'trend' => $trend,
+                    'region' => $item->location ?? 'Various Regions',
+                    'updated' => now()->subDays(rand(0, 3))->diffForHumans()
+                ];
+            });
+
         $cartItems = auth()->check()
             ? Cart::with('produce')
                 ->where('user_id', auth()->id())
@@ -39,8 +60,6 @@ class HomeController extends Controller
                         'price' => '$' . number_format($item->produce->price, 2),
                         'quantity' => $item->quantity,
                         'imageSrc' => $item->produce->image_path ? asset('storage/' . $item->produce->image_path) : 'https://via.placeholder.com/150',
-                
-
                         'imageAlt' => $item->produce->name . ' image',
                     ];
                 })
@@ -50,6 +69,7 @@ class HomeController extends Controller
 
         return Inertia::render('Welcome', [
             'featuredProducts' => $featuredProducts,
+            'marketPrices' => $marketPrices,
             'cartItems' => $cartItems,
             'cartCount' => $cartCount,
         ]);

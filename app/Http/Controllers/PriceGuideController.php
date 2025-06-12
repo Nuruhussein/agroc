@@ -4,9 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\PriceGuide;
 use Illuminate\Http\Request;
-
+use Inertia\Inertia;
 class PriceGuideController extends Controller
 {
+
+    public function priceGuideIndex()
+{
+    $categories = PriceGuide::orderBy('category')->get();
+
+    return Inertia::render('Admin/PriceGuide', [
+        'categories' => $categories,
+    ]);
+}
+
+public function updatePriceGuide(Request $request, PriceGuide $priceGuide)
+{
+    $request->validate([
+        'base_price' => 'required|numeric|min:0',
+    ]);
+
+    $priceGuide->update([
+        'base_price' => $request->base_price,
+    ]);
+
+    return redirect()->back()->with('success', 'Base price updated successfully.');
+}
     /**
      * Display a listing of the resource.
      */

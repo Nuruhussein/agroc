@@ -14,10 +14,12 @@ import MainLayout from '@/layouts/MainLayout.vue';
 // Access Inertia props
 const { props } = usePage();
 const featuredProducts = props.featuredProducts || [];
+const marketPrices = props.marketPrices || [];
 
 // Debug props
 console.log('All props:', props);
 console.log('featuredProducts:', featuredProducts);
+console.log('marketPrices:', marketPrices);
 </script>
 
 <template>
@@ -27,8 +29,8 @@ console.log('featuredProducts:', featuredProducts);
         <Feature />
         <FeaturedProduct :products="featuredProducts" />
         <Statistics />
-        <Cta />
         <Price />
+        <Cta />
         <Footerr />
     </div>
 </template>

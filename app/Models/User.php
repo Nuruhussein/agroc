@@ -21,10 +21,41 @@ class User extends Authenticatable
 
     public function produce() { return $this->hasMany(Produce::class); }
     public function orders() { return $this->hasMany(Order::class, 'buyer_id'); }
-    public function sentMessages() { return $this->hasMany(Message::class, 'sender_id'); }
-    public function receivedMessages() { return $this->hasMany(Message::class, 'receiver_id'); }
+    // public function sentMessages() { return $this->hasMany(Message::class, 'sender_id'); }
+    // public function receivedMessages() { return $this->hasMany(Message::class, 'receiver_id'); }
     public function ratings() { return $this->hasMany(Rating::class, 'buyer_id'); }
     public function notifications() { return $this->hasMany(Notification::class); }
+    // Add to your User model
+public function sentMessages()
+{
+    return $this->hasMany(Message::class, 'sender_id');
+}
+
+public function receivedMessages()
+{
+    return $this->hasMany(Message::class, 'receiver_id');
+}
+
+public function contacts()
+{
+    return $this->hasManyThrough(
+        User::class,
+        Message::class,
+        'sender_id',
+        'id',
+        'id',
+        'receiver_id'
+    )->union(
+        $this->hasManyThrough(
+            User::class,
+            Message::class,
+            'receiver_id',
+            'id',
+            'id',
+            'sender_id'
+        )
+    )->distinct();
+}
 
     protected $hidden = [
         'password',
