@@ -1,4 +1,3 @@
-<!-- src/components/ProductCard.vue -->
 <script setup>
 import { ref, inject } from 'vue';
 
@@ -28,6 +27,7 @@ defineProps({
 
 // Local state for tooltip
 const showCartTooltip = ref(false);
+const showViewTooltip = ref(null);
 </script>
 
 <template>
@@ -38,8 +38,7 @@ const showCartTooltip = ref(false);
     <div class="relative aspect-square overflow-hidden">
       <img
         v-if="product.image_path"
-                 :src="`/storage/${product.image_path}`" 
-
+        :src="`/storage/${product.image_path}`"
         :alt="product.name"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
@@ -74,7 +73,7 @@ const showCartTooltip = ref(false);
       <div
         class="absolute inset-0 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
       >
-        <div class="flex bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
+        <div class="flex bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg space-x-2">
           <!-- Add to Cart Button -->
           <div class="relative">
             <button
@@ -122,11 +121,53 @@ const showCartTooltip = ref(false);
               </svg>
               <span class="sr-only">Add to cart</span>
             </button>
+
             <div
               v-if="showCartTooltip"
               class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap"
             >
               Add to Cart
+              <div
+                class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-0 border-t-4 border-gray-800 border-l-transparent border-r-transparent"
+              ></div>
+            </div>
+          </div>
+
+          <!-- View Product Button -->
+          <div class="relative">
+            <a
+              :href="`/markateplace/${product.id}`"
+              class="p-2 text-gray-700 hover:text-indigo-600  hover:bg-white rounded-full transition-colors duration-200"
+              @mouseenter="showViewTooltip = product.id"
+              @mouseleave="showViewTooltip = null"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              <span class="sr-only">View product</span>
+            </a>
+            <div
+              v-if="showViewTooltip === product.id"
+              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap"
+            >
+              View Product
               <div
                 class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-0 border-t-4 border-gray-800 border-l-transparent border-r-transparent"
               ></div>

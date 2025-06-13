@@ -16,7 +16,7 @@ class User extends Authenticatable
     ];
 
     protected $fillable = [
-        'name', 'email', 'phone', 'role', 'region', 'password',
+        'name', 'email', 'phone', 'role', 'region', 'password','profile_picture',
     ];
 
     public function produce() { return $this->hasMany(Produce::class); }

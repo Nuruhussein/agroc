@@ -15,7 +15,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\BuyerDashboardController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ChatController;
-
+use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\FarmerOrderController;
 Route::get('/', [HomeController::class, 'featured'])->name('home');
@@ -58,7 +58,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users');
     Route::get('/users/{user}', [UserManagementController::class, 'show'])->name('admin.users.show');
     Route::post('/users', [UserManagementController::class, 'store'])->name('admin.users.store');
-    Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('admin.users.update');
+    Route::post('/users/{user}', [UserManagementController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
 
@@ -81,6 +81,12 @@ Route::resource('notifications', NotificationController::class);
 
 Route::get('/markateplace', [MarketController::class, 'index'])->name('markateplace');
 
+Route::get('/markateplace/{produce}', [MarketController::class, 'show'])->name('markateplace.show');
+Route::get('/markateplace/user/{user}', [MarketController::class, 'userProfile'])->name('markateplace.user');
+
+
+
+Route::get('/profiles', [ProfileController::class, 'index'])->name('profiles.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');

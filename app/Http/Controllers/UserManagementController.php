@@ -10,8 +10,17 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $users = User::select('id', 'name', 'email', 'role', 'phone', 'region', 'created_at')->get();
-        return inertia('Users/Index', ['users' => $users]);
+        // Paginate users (10 per page, adjust as needed)
+        $users = User::select('id', 'name', 'email', 'role', 'phone', 'region', 'created_at', 'profile_picture')
+                     ->paginate(10);
+
+        return inertia('Users/Index', [
+            'users' => $users,
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error'),
+            ],
+        ]);
     }
 
     public function show(User $user)
@@ -29,17 +38,26 @@ class UserManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'region' => 'nullable|string|max:100',
             'password' => 'required|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add profile picture validation
         ]);
 
         try {
-            User::create([
+            $data = [
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'role' => $validated['role'],
                 'phone' => $validated['phone'],
                 'region' => $validated['region'],
                 'password' => Hash::make($validated['password']),
-            ]);
+            ];
+
+            // Handle profile picture upload
+            if ($request->hasFile('profile_picture')) {
+                $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $data['profile_picture'] = $path;
+            }
+
+            User::create($data);
             return redirect()->route('admin.users')->with('success', 'User created successfully');
         } catch (\Exception $e) {
             Log::error('Error creating user: ' . $e->getMessage());
@@ -56,6 +74,7 @@ class UserManagementController extends Controller
             'phone' => 'nullable|string|max:20',
             'region' => 'nullable|string|max:100',
             'password' => 'nullable|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add profile picture validation
         ]);
 
         try {
@@ -66,9 +85,21 @@ class UserManagementController extends Controller
                 'phone' => $validated['phone'],
                 'region' => $validated['region'],
             ];
+
             if (!empty($validated['password'])) {
                 $data['password'] = Hash::make($validated['password']);
             }
+
+            // Handle profile picture upload
+            if ($request->hasFile('profile_picture')) {
+                // Delete old profile picture if it exists
+                if ($user->profile_picture) {
+                    \Storage::disk('public')->delete($user->profile_picture);
+                }
+                $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $data['profile_picture'] = $path;
+            }
+
             $user->update($data);
             return redirect()->route('admin.users')->with('success', 'User updated successfully');
         } catch (\Exception $e) {
@@ -80,6 +111,10 @@ class UserManagementController extends Controller
     public function destroy(User $user)
     {
         try {
+            // Delete profile picture if it exists
+            if ($user->profile_picture) {
+                \Storage::disk('public')->delete($user->profile_picture);
+            }
             $user->delete();
             return redirect()->route('admin.users')->with('success', 'User deleted successfully');
         } catch (\Exception $e) {

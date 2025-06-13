@@ -17,6 +17,7 @@ const form = useForm({
     region: userRole ? '' : undefined,
     password: '',
     password_confirmation: '',
+    profile_picture: null, // Add profile picture field
 });
 
 const submit = () => {
@@ -27,7 +28,7 @@ const submit = () => {
             : 'register';
     
     form.post(route(routeName), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onFinish: () => form.reset('password', 'password_confirmation', 'profile_picture'),
     });
 };
 </script>
@@ -36,7 +37,7 @@ const submit = () => {
     <AuthBase title="title" :description="userRole ? `Enter your details to register as a ${userRole}` : 'Enter your details to create an account'">
         <Head title="title" />
 
-        <form @submit.prevent="submit" class="flex flex-col gap-6">
+        <form @submit.prevent="submit" class="flex flex-col gap-6" enctype="multipart/form-data">
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Full Name</Label>
@@ -63,6 +64,12 @@ const submit = () => {
                         <InputError :message="form.errors.region" />
                     </div>
                 </template>
+
+                <div class="grid gap-2">
+                    <Label for="profile_picture">Profile Picture (Optional)</Label>
+                    <Input id="profile_picture" type="file" accept="image/*" @change="form.profile_picture = $event.target.files[0]" />
+                    <InputError :message="form.errors.profile_picture" />
+                </div>
 
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>

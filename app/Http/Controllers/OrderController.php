@@ -94,7 +94,7 @@ class OrderController extends Controller
                 Cart::where('user_id', Auth::id())->delete();
             }
 
-            return redirect()->route('orders.show', $order->id)
+            return redirect()->route('markateplace', $order->id)
                 ->with('success', 'Order placed successfully!');
         });
     }
