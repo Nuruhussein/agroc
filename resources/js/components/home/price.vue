@@ -1,6 +1,6 @@
 <template>
     <!-- Price Guide Preview - All in One Component -->
-    <section class="py-16">
+    <section id="price" class="py-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-8">

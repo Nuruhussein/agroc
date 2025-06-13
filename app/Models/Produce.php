@@ -21,10 +21,10 @@ class Produce extends Model
     'organic',
     'quantity',
     'image_path',
-    'unit', // Add this
+    'unit', 
 ];
 
-// app/Models/Produce.php
+
 protected $table = 'produce';
 public function category()
 {

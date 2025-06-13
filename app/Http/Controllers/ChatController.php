@@ -31,12 +31,18 @@ class ChatController extends Controller
 
         // Load contact details for each conversation
         $conversations->each(function ($conversation) {
-            $conversation->contact = User::select('id', 'name', 'role')
+            $conversation->contact = User::select('id', 'name', 'role', 'profile_picture')
                 ->find($conversation->contact_id);
         });
 
         $messages = [];
         $receiver = null;
+
+        // Fetch farmers (users with role 'farmer')
+        $farmers = User::select('id', 'name', 'profile_picture')
+            ->where('role', 'farmer')
+            ->where('id', '!=', Auth::id())
+            ->get();
 
         // If a receiver is selected, fetch messages
         if ($receiverId) {
@@ -63,6 +69,7 @@ class ChatController extends Controller
             'messages' => $messages,
             'receiver' => $receiver,
             'currentUser' => Auth::user(),
+            'farmers' => $farmers,
         ]);
     }
 
@@ -95,5 +102,59 @@ class ChatController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Message sent successfully');
+    }
+
+    public function update(Request $request, Message $message)
+    {
+        // Authorize: Only the sender can edit the message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'message' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $imagePath = $message->image_path;
+        $originalName = $message->image_original_name;
+        $mimeType = $message->mime_type;
+
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $file = $request->file('image');
+            $imagePath = $file->store('chat_images', 'public');
+            $originalName = $file->getClientOriginalName();
+            $mimeType = $file->getClientMimeType();
+        }
+
+        $message->update([
+            'message' => $request->message,
+            'image_path' => $imagePath,
+            'image_original_name' => $originalName,
+            'mime_type' => $mimeType,
+        ]);
+
+        return redirect()->back()->with('success', 'Message updated successfully');
+    }
+
+    public function destroy(Message $message)
+    {
+        // Authorize: Only the sender can delete the message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Delete associated image if it exists
+        if ($message->image_path) {
+            Storage::disk('public')->delete($message->image_path);
+        }
+
+        $message->delete();
+
+        return redirect()->back()->with('success', 'Message deleted successfully');
     }
 }

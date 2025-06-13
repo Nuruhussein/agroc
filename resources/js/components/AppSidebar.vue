@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, Home, ShoppingCart, Tag, ClipboardList } from 'lucide-vue-next';
+import { BookOpen, Folder, Home, ShoppingCart, Tag, ClipboardList,MessageCircle } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 // Access user role from Inertia props
@@ -55,6 +55,11 @@ const allNavItems: NavItem[] = [
     href: route('farmer.orders.index'),
     icon: ClipboardList,
   },
+    {
+    title: 'Chats',
+    href: route('chat.index'),
+    icon: MessageCircle ,
+  },
  
 ];
 
@@ -66,7 +71,7 @@ const mainNavItems = computed(() => {
 
   switch (userRole.value) {
     case 'buyer':
-      return allNavItems.filter((item) => ['Orders', 'createOrders'].includes(item.title));
+      return allNavItems.filter((item) => ['Orders', 'createOrders','Chats'].includes(item.title));
     case 'admin':
       return  allNavItems.filter((item) => item.title !== 'my Orders');
     case 'farmer':
@@ -76,18 +81,7 @@ const mainNavItems = computed(() => {
   }
 });
 
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Github Repo',
-    href: 'https://github.com/laravel/vue-starter-kit',
-    icon: Folder,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits',
-    icon: BookOpen,
-  },
-];
+
 </script>
 
 <template>

@@ -10,17 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Cart;
 class OrderController extends Controller
 {
-    // public function index()
-    // {
-    //     $orders = Order::with(['items.produce', 'buyer'])
-    //         ->where('buyer_id', Auth::id())
-    //         ->latest()
-    //         ->get();
-
-    //     return inertia('Orders/Index', [
-    //         'orders' => $orders
-    //     ]);
-    // }
+ 
  public function index()
 {
     $query = Order::with(['items.produce.user', 'buyer'])->latest();
@@ -88,9 +78,9 @@ class OrderController extends Controller
 
             $order->update(['total_amount' => $totalAmount]);
 
-            // Clear the cart
+     
             if ($request->has('clear_cart') && $request->clear_cart) {
-                // Implement your cart clearing logic here
+      
                 Cart::where('user_id', Auth::id())->delete();
             }
 
@@ -103,7 +93,7 @@ public function show(Order $order)
 {
     $user = Auth::user();
 
-    // Restrict access to buyers (unless admin)
+
     if ($user->role !== 'admin' && $order->buyer_id !== $user->id) {
         abort(403, 'Unauthorized access to this order.');
     }

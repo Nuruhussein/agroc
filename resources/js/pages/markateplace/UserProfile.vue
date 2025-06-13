@@ -53,7 +53,7 @@ defineProps({
       </Link>
 
       <!-- User Profile Card -->
-      <div class="bg-white rounded-2xl shadow-xl border border-gray-100/50 overflow-hidden">
+      <div class=" rounded-2xl shadow-xl border  overflow-hidden">
         <!-- Profile Header -->
         <div class="p-8 bg-gradient-to-br from-indigo-500/10 to-emerald-500/10">
           <div class="flex flex-col sm:flex-row items-center gap-6">

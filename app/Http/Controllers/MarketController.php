@@ -48,7 +48,7 @@ class MarketController extends Controller
     {
         return Inertia::render('markateplace/Show', [
             'produce' => $produce->load('user', 'category'),
-            'isAdmin' => Auth::user()->role === 'admin',
+            'isAdmin' => Auth::check() && Auth::user()->role === 'admin',
         ]);
     }
 

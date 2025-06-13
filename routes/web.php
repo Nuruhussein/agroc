@@ -16,25 +16,29 @@ use App\Http\Controllers\BuyerDashboardController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FarmerOrderController;
+
 Route::get('/', [HomeController::class, 'featured'])->name('home');
 
 Route::get('/roletest', function () {
     return Inertia::render('test/roletest');
 })->name('roletest');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/buyerdashboard', [BuyerDashboardController::class, 'buyerDashboard'])->name('buyer.dashboard');
 
-    
+    route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
      Route::get('/chat/conversations', [ChatController::class, 'conversations']);
  Route::get('/chat/{receiverId?}', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
+    
+    Route::put('/chat/{message}', [ChatController::class, 'update'])->name('chat.update');
+Route::delete('/chat/{message}', [ChatController::class, 'destroy'])->name('chat.destroy');
 });
 Route::middleware(['adminOrFarmer'])->group(function () {
     // Register all resource routes except 'update'
@@ -62,8 +66,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
 
-    Route::get('/price-guides', [PriceGuideController::class, 'priceGuideIndex'])->name('admin.price-guides.index');
-    Route::post('/price-guides/{priceGuide}', [PriceGuideController::class, 'updatePriceGuide'])->name('admin.price-guides.update');
+    // Route::get('/price-guides', [PriceGuideController::class, 'priceGuideIndex'])->name('admin.price-guides.index');
+    // Route::post('/price-guides/{priceGuide}', [PriceGuideController::class, 'updatePriceGuide'])->name('admin.price-guides.update');
 
 });
 

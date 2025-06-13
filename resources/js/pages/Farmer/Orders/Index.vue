@@ -1,7 +1,8 @@
 <script setup>
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { EyeIcon } from '@heroicons/vue/24/outline';
+// Use Lucide icon instead of Heroicons
+import { Eye } from 'lucide-vue-next';
 
 const props = defineProps({
   orders: Array,
@@ -43,18 +44,19 @@ const statusColors = {
             <div
               class="p-3 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white"
             >
-              <EyeIcon class="h-6 w-6" />
+              <Eye class="h-6 w-6" />
             </div>
             <div class="flex-1">
               <h2 class="text-lg font-semibold text-gray-800">
                 Order #{{ order.id }}
               </h2>
-              <p
+                <p
                 class="mt-1 text-sm font-medium px-2 py-1 rounded-full inline-block"
-                :class="statusColors[order.status] || 'text-gray-600 bg-gray-100'"
-              >
-                Status: {{ order.status.charAt(0).toUpperCase() + order.status.slice(1) }}
-              </p>
+                :class="statusColors[order.total_quantity === order.delivered_quantity ? 'delivered' : 'pending'] || 'text-gray-600 bg-gray-100'"
+                >
+                Status: {{ order.total_quantity === order.delivered_quantity ? 'Delivered' : 'Pending' }}
+                </p>
+
               <p class="text-sm text-gray-600">Buyer: {{ order.buyer?.name || 'Unknown' }}</p>
               <p class="text-sm text-gray-600">Total Items: {{ order.total_quantity }}</p>
               <p class="text-sm text-gray-600">Delivered: {{ order.delivered_quantity }}</p>
@@ -66,9 +68,9 @@ const statusColors = {
               :href="`/farmer/orders/${order.id}`"
               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
             >
-              <EyeIcon class="h-5 w-5 mr-2" />
+              <Eye class="h-5 w-5 mr-2" />
               View Order
-          </Link>
+            </Link>
           </div>
         </div>
       </div>

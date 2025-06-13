@@ -1,8 +1,10 @@
 <script setup>
 import { Head, router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { TruckIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 import { ref, computed } from 'vue';
+
+// Import Lucide icons instead of Heroicons
+import { Truck, CheckCircle } from 'lucide-vue-next';
 
 console.log('Component mounted'); // Debug component load
 
@@ -105,10 +107,10 @@ const getError = (itemId) => itemErrors.value[itemId] || props.errors?.delivery_
             <div
               class="p-3 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white"
             >
-              <TruckIcon class="h-6 w-6" />
+              <Truck class="h-6 w-6" />
             </div>
             <div>
-              <p class="text-lg font-semibold text-gray-700">
+              <!-- <p class="text-lg font-semibold text-gray-700">
                 Status:
                 <span
                   :class="statusColors[order.status]"
@@ -116,9 +118,9 @@ const getError = (itemId) => itemErrors.value[itemId] || props.errors?.delivery_
                 >
                   {{ capitalize(order.status) }}
                 </span>
-              </p>
+              </p> -->
               <p class="text-gray-600">Buyer: {{ order.buyer?.name || 'Unknown' }}</p>
-              <p class="text-gray-600">Total Amount: ${{ order.total_amount }}</p>
+              <!-- <p class="text-gray-600">Total Amount: ${{ order.total_amount }}</p> -->
             </div>
           </div>
         </div>
@@ -135,7 +137,7 @@ const getError = (itemId) => itemErrors.value[itemId] || props.errors?.delivery_
             <div
               class="p-3 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white"
             >
-              <CheckCircleIcon class="h-6 w-6" />
+              <CheckCircle class="h-6 w-6" />
             </div>
             <div class="flex-1">
               <h3 class="text-lg font-semibold text-gray-800">
@@ -150,7 +152,6 @@ const getError = (itemId) => itemErrors.value[itemId] || props.errors?.delivery_
                   :class="statusColors[item.delivery_status]"
                   class="px-2 py-1 rounded-full text-sm"
                 >
-                
                       {{ item.delivery_status }}
                 </span>
               </p>
@@ -182,7 +183,7 @@ const getError = (itemId) => itemErrors.value[itemId] || props.errors?.delivery_
               type="submit"
               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
             >
-              <TruckIcon class="h-5 w-5 mr-2" />
+              <Truck class="h-5 w-5 mr-2" />
               Update
             </button>
           </form>
