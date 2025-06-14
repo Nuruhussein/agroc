@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 py-20">
+    <section id="contact-us" class="bg-gray-50 dark:from-gray-800 dark:to-gray-900 py-20">
         <div class="container flex flex-col items-center px-4 mx-auto text-center">
             <h2 class="text-4xl font-bold tracking-tight text-gray-900 xl:text-5xl dark:text-white">
                 Join Our Marketplace Today

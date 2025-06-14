@@ -6,7 +6,7 @@
       
       <div v-if="cartItems.length" class="mt-8">
         <div v-for="item in cartItems" :key="item.produce_id" class="flex items-center py-4 border-b">
-          <img :src="item.image" :alt="item.name" class="w-24 h-24 object-cover rounded-md" />
+          <img :src="item.imageSrc" :alt="item.imageAlt || item.name" class="w-24 h-24 object-cover rounded-full" />
           <div class="ml-4 flex-1">
             <h3 class="text-lg font-medium text-gray-900">{{ item.name }}</h3>
             <div class="flex items-center space-x-2 mt-2">
@@ -64,7 +64,7 @@
       <div v-else class="mt-8 text-center">
       <p class="text-gray-500">Your cart is empty.</p>
       <Link
-        href="/products"  
+        href="/markateplace"  
         class="mt-4 inline-block text-green-600 hover:text-green-800 font-medium"
       >
         Continue Shopping
@@ -151,6 +151,8 @@ const placeOrder = async () => {
         // shippingAddress.value = '';
         // billingAddress.value = '';
         alert('Order placed successfully!'); // Or use a more sophisticated notification
+        Window.location.href = '/markateplace'; // Redirect to marketplace or order confirmation page
+
       },
       onError: (errors) => {
         console.error('Order placement failed with validation errors:', errors);

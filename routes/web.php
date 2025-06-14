@@ -18,6 +18,10 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FarmerOrderController;
+use App\Http\Controllers\BuyerReportController;
+use App\Http\Controllers\AdminReportController;
+
+
 
 Route::get('/', [HomeController::class, 'featured'])->name('home');
 
@@ -39,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::put('/chat/{message}', [ChatController::class, 'update'])->name('chat.update');
 Route::delete('/chat/{message}', [ChatController::class, 'destroy'])->name('chat.destroy');
+
 });
 Route::middleware(['adminOrFarmer'])->group(function () {
     // Register all resource routes except 'update'
@@ -66,10 +71,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
 
+     Route::get('/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::patch('/reports/{report}/status', [AdminReportController::class, 'updateStatus'])->name('admin.reports.updateStatus');
+
     // Route::get('/price-guides', [PriceGuideController::class, 'priceGuideIndex'])->name('admin.price-guides.index');
     // Route::post('/price-guides/{priceGuide}', [PriceGuideController::class, 'updatePriceGuide'])->name('admin.price-guides.update');
 
 });
+
+
+
+ Route::get('/buyer/report/{orderItem}', [BuyerReportController::class, 'create'])->name('buyer.report.create');
+    Route::post('/buyer/report/{orderItem}', [BuyerReportController::class, 'store'])->name('buyer.report.store');
 
 Route::resource('orders', OrderController::class)->except(['store']);
 Route::post('orders', [OrderController::class, 'store'])

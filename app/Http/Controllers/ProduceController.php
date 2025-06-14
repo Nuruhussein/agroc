@@ -8,10 +8,15 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 class ProduceController extends Controller
 {
     public function index(Request $request)
     {
+       
+
+        //  Mail::to('msalegt@gmail.com')->send(new SendEmail());
         $search = $request->input('search', '');
 
         $query = Produce::with('user', 'category');

@@ -1,7 +1,7 @@
 <!-- src/components/Statistics.vue -->
 <template>
-  <section  id="about-us" class="text-gray-600 mx-20 my-10 body-font">
-    <div class="container px-5 py-24 mx-auto flex flex-wrap">
+  <section  id="about_us" class="text-gray-600 mx-20 my-10 body-font">
+    <div class="container px-5 py-24 justify-between ml-20 mx-auto flex flex-wrap">
       <div class="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
         <div class="w-full sm:p-4 px-4 mb-6">
           <h1 class="title-font font-bold text-3xl md:text-4xl mb-4 text-gray-900 tracking-tight">

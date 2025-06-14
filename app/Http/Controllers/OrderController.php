@@ -80,11 +80,12 @@ class OrderController extends Controller
 
      
             if ($request->has('clear_cart') && $request->clear_cart) {
-      
                 Cart::where('user_id', Auth::id())->delete();
             }
 
-            return redirect()->route('markateplace', $order->id)
+           
+
+            return redirect()->route('cart.index')
                 ->with('success', 'Order placed successfully!');
         });
     }

@@ -57,7 +57,7 @@
                 class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"
               ></span>
             </Link>
-            <Link
+            <!-- <Link
               href="/#locations"
               class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
             >
@@ -65,7 +65,7 @@
               <span
                 class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"
               ></span>
-            </Link>
+            </Link> -->
             <Link
               href="/profiles"
               class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100 px-1 py-2 font-medium transition-colors duration-200 relative group"
@@ -254,12 +254,12 @@
             >
               Contact us
             </Link>
-            <Link
+            <!-- <Link
               href="/#locations"
               class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"
             >
               Locations
-            </Link>
+            </Link> -->
             <Link
               href="/profiles"
               class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-gray-700 rounded-md"

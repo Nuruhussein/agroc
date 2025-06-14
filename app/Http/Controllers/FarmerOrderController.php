@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use App\Mail\DeliveryStatusUpdated;
+use Illuminate\Support\Facades\Mail;
 class FarmerOrderController extends Controller
 {
   public function index()
@@ -77,6 +79,13 @@ class FarmerOrderController extends Controller
             if ($order->items->every(fn($item) => $item->delivery_status === 'delivered')) {
                 $order->update(['status' => 'completed']);
             }
+  // ✅ Send email if the item was marked as delivered
+        if ($request->delivery_status === 'delivered') {
+            Mail::to($order->buyer->email)->send(new DeliveryStatusUpdated($orderItem));
+            // Mail::to('weddihaji@gmail.com')->send(new DeliveryStatusUpdated($orderItem));
+
+
+        }
 
             return redirect()->route('farmer.orders.show', $orderId)
                 ->with('success', 'Status updated successfully!');

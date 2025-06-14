@@ -60,6 +60,11 @@ const allNavItems: NavItem[] = [
     href: route('chat.index'),
     icon: MessageCircle ,
   },
+  {
+    title: 'Reports',
+    href: route('admin.reports.index'),
+    icon: BookOpen,
+  },
  
 ];
 
@@ -75,7 +80,7 @@ const mainNavItems = computed(() => {
     case 'admin':
       return  allNavItems.filter((item) => item.title !== 'my Orders');
     case 'farmer':
-      return allNavItems.filter((item) => item.title !== 'Category' && item.title !== 'Orders' && item.title !== 'manage Users');
+      return allNavItems.filter((item) => item.title !== 'Category' && item.title !== 'Orders' && item.title !== 'manage Users' && item.title !== 'Reports');
     default:
       return []; // Unknown role
   }
@@ -90,7 +95,7 @@ const mainNavItems = computed(() => {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" as-child>
-            <Link :href="route('dashboard')">
+            <Link :href="route('home')" class="flex items-center justify-center">
               <AppLogo />
             </Link>
           </SidebarMenuButton>
